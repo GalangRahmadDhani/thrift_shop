@@ -1,23 +1,27 @@
+import 'package:ecommerce_app/data/repositories/authentication/authentication_repository.dart';
+import 'package:ecommerce_app/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'app.dart';
 import 'package:flutter/material.dart';
 
-void main() async{
+Future<void> main() async{
 
-  // Supabase Setup
-  // await Supabase.initialize(
-  //   url: 'https://eplehsoebijzcbltoxkg.supabase.co',
-  //   anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVwbGVoc29lYmlqemNibHRveGtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc2Nzg3MTYsImV4cCI6MjA1MzI1NDcxNn0.gm1cnbZHnKU-1oWyyyv4LBgIyR-K8dU5Ca6kcl8dv2o'
-  // );
+  // Add Widget Binding 
+  final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
-  // Inisialisasi widget binding
+  // GetX Local Storage
+  await GetStorage.init();
 
-  // Todo: Add Widget Binding 
-  // Todo: Init Local Storage
-  // Todo: Await Native Splash -- Versi Saya Sendiri!!!
-  // Todo: Initialize Firebase
+  // Await Native Splash hingga item lain ke load
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  // Todo: Initialize Authentication
+  // Initialize Firebase
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform).then(
+    (FirebaseApp value) => Get.put(AuthenticationRepository())
+  );
 
   runApp(const App());
 }

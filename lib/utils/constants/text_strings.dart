@@ -44,7 +44,7 @@ class TTexts {
 
   // -- Authentication Headings
   static const String loginTitle = "Selamat Datang,";
-  static const String loginSubTitle = "Discover Limitless Choices and Unmatched Convenience.";
+  static const String loginSubTitle = "Temukan Pilihan Tanpa Batas dan Kenyamanan yang Tak Tertandingi.";
   static const String signupTitle = "Let’s create your account";
   static const String forgetPasswordTitle = "Forget password";
   static const String forgetPasswordSubTitle = "Don’t worry sometimes people can forget too, enter your email and we will send you a password reset link.";
@@ -53,8 +53,8 @@ class TTexts {
   static const String confirmEmail = "Verify your email address!";
   static const String confirmEmailSubTitle = "Congratulations! Your Account Awaits: Verify Your Email to Start Shopping and Experience a World of Unrivaled Deals and Personalized Offers.";
   static const String emailNotReceivedMessage = "Didn’t get the email? Check your junk/spam or resend it.";
-  static const String yourAccountCreatedTitle = "Your account successfully created!";
-  static const String yourAccountCreatedSubTitle = "Welcome to Your Ultimate Shopping Destination: Your Account is Created, Unleash the Joy of Seamless Online Shopping!";
+  static const String yourAccountCreatedTitle = "Akun Anda berhasil dibuat!";
+  static const String yourAccountCreatedSubTitle = "Selamat datang di Tujuan Pembelanjaan Anda: Akun Anda Telah Dibuat, Nikmati Kegembiraan Berbelanja Online Tanpa Hambatan!";
 
 
   // -- Product

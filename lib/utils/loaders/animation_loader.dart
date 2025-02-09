@@ -29,13 +29,52 @@ class TAnimationLoaderWidget extends StatelessWidget {
   final String? actionText;
   final VoidCallback? onActionPressed;
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Center(
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: [
+  //         Lottie.asset(animation, width: MediaQuery.of(context).size.width * 0.8), // Display Lottie animation
+  //         const SizedBox(height: TSizes.defaultSpace),
+  //         Text(
+  //           text,
+  //           style: Theme.of(context).textTheme.bodyMedium,
+  //           textAlign: TextAlign.center,
+  //         ),
+  //         const SizedBox(height: TSizes.defaultSpace),
+  //         showAction
+  //             ? SizedBox(
+  //                 width: 250,
+  //                 child: OutlinedButton(
+  //                   onPressed: onActionPressed,
+  //                   style: OutlinedButton.styleFrom(backgroundColor: TColors.dark),
+  //                   child: Text(
+  //                     actionText!,
+  //                     style: Theme.of(context).textTheme.bodyMedium!.apply(color: TColors.light),
+  //                   ),
+  //                 ),
+  //               )
+  //             : const SizedBox(),
+  //       ],
+  //     ),
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: TSizes.defaultSpace),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Lottie.asset(animation, width: MediaQuery.of(context).size.width * 0.8), // Display Lottie animation
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.3, // Constrain height to 30% of screen height
+            child: Lottie.asset(
+              animation,
+              fit: BoxFit.contain, // Ensure animation fits within bounds
+            ),
+          ),
           const SizedBox(height: TSizes.defaultSpace),
           Text(
             text,
@@ -43,21 +82,20 @@ class TAnimationLoaderWidget extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: TSizes.defaultSpace),
-          showAction
-              ? SizedBox(
-                  width: 250,
-                  child: OutlinedButton(
-                    onPressed: onActionPressed,
-                    style: OutlinedButton.styleFrom(backgroundColor: TColors.dark),
-                    child: Text(
-                      actionText!,
-                      style: Theme.of(context).textTheme.bodyMedium!.apply(color: TColors.light),
-                    ),
-                  ),
-                )
-              : const SizedBox(),
+          if (showAction)
+            SizedBox(
+              width: 250,
+              child: OutlinedButton(
+                onPressed: onActionPressed,
+                style: OutlinedButton.styleFrom(backgroundColor: TColors.dark),
+                child: Text(
+                  actionText!,
+                  style: Theme.of(context).textTheme.bodyMedium!.apply(color: TColors.light),
+                ),
+              ),
+            ),
         ],
       ),
     );
-  }
+  } 
 }

@@ -1,5 +1,13 @@
 
 class TValidator {
+  static String? validateEmptyText(String? fieldName, String? value) {
+    if(value == null || value.isEmpty){
+      return '$fieldName is required.';
+    }
+
+    return null;
+  }
+
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required.';
@@ -43,16 +51,30 @@ class TValidator {
     return null;
   }
 
+  // static String? validatePhoneNumber(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Nomor telepon wajib diisi.';
+  //   }
+
+  //   final phoneRegExp = RegExp(r'^\d{12}$');
+
+  //   if (!phoneRegExp.hasMatch(value)) {
+  //     return 'Invalid phone number format (12 digits required).';
+  //   }
+
+  //   return null;
+  // }
+
   static String? validatePhoneNumber(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Phone number is required.';
+      return 'Nomor telepon wajib diisi.';
     }
 
-    // Regular expression for phone number validation (assuming a 10-digit US phone number format)
-    final phoneRegExp = RegExp(r'^\d{10}$');
+    // Regex untuk nomor telepon Indonesia (dengan atau tanpa +62)
+    final phoneRegExp = RegExp(r'^(?:\+62|62|0)8\d{8,11}$');
 
     if (!phoneRegExp.hasMatch(value)) {
-      return 'Invalid phone number format (10 digits required).';
+      return 'Format nomor telepon tidak valid (contoh: 081234567890 atau +6281234567890).';
     }
 
     return null;

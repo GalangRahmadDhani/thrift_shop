@@ -12,21 +12,39 @@ class TFullScreenLoader {
   /// Parameters:
   ///   - text: The text to be displayed in the loading dialog.
   ///   - animation: The Lottie animation to be shown.
+  // static void openLoadingDialog(String text, String animation) {
+  //   showDialog(
+  //     context: Get.overlayContext!, // Use Get.overlayContext for overlay dialogs
+  //     barrierDismissible: false, // The dialog can't be dismissed by tapping outside it
+  //     builder: (_) => PopScope(
+  //       canPop: false, // Disable popping with the back button
+  //       child: Container(
+  //         color: THelperFunctions.isDarkMode(Get.context!) ? TColors.dark : TColors.white,
+  //         width: double.infinity,
+  //         height: double.infinity,
+  //         child: Column(
+  //           children: [
+  //             const SizedBox(height: 250), // Adjust the spacing as needed
+  //             TAnimationLoaderWidget(text: text, animation: animation),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
   static void openLoadingDialog(String text, String animation) {
     showDialog(
-      context: Get.overlayContext!, // Use Get.overlayContext for overlay dialogs
-      barrierDismissible: false, // The dialog can't be dismissed by tapping outside it
+      context: Get.overlayContext!,
+      barrierDismissible: false,
       builder: (_) => PopScope(
-        canPop: false, // Disable popping with the back button
+        canPop: false,
         child: Container(
           color: THelperFunctions.isDarkMode(Get.context!) ? TColors.dark : TColors.white,
           width: double.infinity,
           height: double.infinity,
-          child: Column(
-            children: [
-              const SizedBox(height: 250), // Adjust the spacing as needed
-              TAnimationLoaderWidget(text: text, animation: animation),
-            ],
+          child: Center( // Wrap with Center
+            child: TAnimationLoaderWidget(text: text, animation: animation),
           ),
         ),
       ),

@@ -93,6 +93,10 @@ class TFirebaseException implements Exception {
         return 'The action code is invalid. Please check the code and try again.';
       case 'credential-already-in-use':
         return 'This credential is already associated with a different user account.';
+      case 'permission-denied':
+        return 'You do not have permission to perform this action.';
+      case 'unavailable':
+        return 'The server is currently unavailable. Please try again later.';
       default:
         return 'An unexpected Firebase error occurred. Please try again.';
     }

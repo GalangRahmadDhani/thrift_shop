@@ -4,6 +4,13 @@
 /// This class contains all the App Images in String formats.
 class TImages {
 
+  // -- App Loafing Gif
+  static const String loading = 'assets/icons/loading.gif';
+
+  // -- App Json
+  static const String loadingJson = 'assets/icons/lotti_loading.json';
+  static const String successFullyRegisterAnimation = 'assets/icons/success.json';
+
   // -- App Logos
   static const String darkAppLogo = "assets/logos/t-store-splash-logo-black.png";
   static const String lightAppLogo = "assets/logos/t-store-splash-logo-white.png";
