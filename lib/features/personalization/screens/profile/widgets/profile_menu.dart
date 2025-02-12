@@ -9,11 +9,13 @@ class TProfileMenu extends StatelessWidget {
     required this.onPressed, 
     required this.title, 
     required this.value,
+    this.showIcon = true
   });
 
   final IconData icon;
   final VoidCallback onPressed;
   final String title, value;
+  final bool showIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,12 @@ class TProfileMenu extends StatelessWidget {
           children: [
             Expanded(flex: 3, child: Text(title, style: Theme.of(context).textTheme.bodySmall, overflow:TextOverflow.ellipsis,)),
             Expanded(flex: 5, child: Text(value, style: Theme.of(context).textTheme.bodyMedium, overflow:TextOverflow.ellipsis,)),
-            Expanded(child: Icon(icon, size: 18,))
+            Expanded(
+              child: Opacity(
+                opacity: showIcon ? 1.0 : 0.0,
+                child: Icon(icon, size: 18),
+              ),
+            )
           ],
         ),
       ),

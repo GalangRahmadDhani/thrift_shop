@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:ecommerce_app/common/widgets/success_screen/success_screen.dart';
 import 'package:ecommerce_app/data/repositories/authentication/authentication_repository.dart';
+import 'package:ecommerce_app/data/repositories/user/user_repository.dart';
 import 'package:ecommerce_app/utils/constants/image_strings.dart';
 import 'package:ecommerce_app/utils/constants/text_strings.dart';
 import 'package:ecommerce_app/utils/popups/loaders.dart';
@@ -10,6 +11,9 @@ import 'package:get/get.dart';
 
 class VerifyEmailController extends GetxController {
   static VerifyEmailController get instance => Get.find();
+
+  Timer? _timer;
+  final userRepository = Get.put(UserRepository());
 
   // Send Email kapanpun Verify Screen muncul & set timer untuk auto redirect
   @override
@@ -30,25 +34,71 @@ class VerifyEmailController extends GetxController {
   }
 
   // Timer untuk redirect ketika email verification
-  setTimerForAutoRedirect() async{
-    Timer.periodic(
-      const Duration(seconds: 1), 
-      (timer) async {
-        await FirebaseAuth.instance.currentUser?.reload();
-        final user = FirebaseAuth.instance.currentUser;
-        if (user?.emailVerified ?? false) { 
+  // setTimerForAutoRedirect() async{
+  //   _timer = Timer.periodic(
+  //     const Duration(seconds: 2), 
+  //     (timer) async {
+  //       try {
+  //         // Force reload user
+  //         await FirebaseAuth.instance.currentUser?.reload();
+  //         final user = FirebaseAuth.instance.currentUser;
+          
+  //         print("Checking verification status: ${user?.emailVerified}"); // Debug
+
+  //         if (user?.emailVerified ?? false) {
+  //           timer.cancel();
+  //           Get.offAll(
+  //             () => SuccessScreen(
+  //               image: TImages.successFullyRegisterAnimation,
+  //               title: TTexts.yourAccountCreatedTitle,
+  //               subTitle: TTexts.yourAccountCreatedSubTitle,
+  //               onPressed: () => AuthenticationRepository.instance.screenRedirect(),
+  //             ),
+  //             predicate: (route) => false,
+  //           );
+  //         }
+  //       } catch (e) {
+  //         print("Verification check error: $e"); // Debug
+  //         timer.cancel();
+  //         TLoaders.errorSnackBar(title: 'Error', message: e.toString());
+  //       }
+  //     }
+  //   );
+  // }
+
+setTimerForAutoRedirect() {
+  _timer = Timer.periodic(
+    const Duration(seconds: 3), 
+    (timer) async {
+      try {
+        // Force reload user dan cek status verifikasi
+        User? currentUser = FirebaseAuth.instance.currentUser;
+        await currentUser?.reload();
+        final isVerified = currentUser?.emailVerified ?? false;
+        
+        if (isVerified) {
           timer.cancel();
-          Get.off(() => SuccessScreen(
-            image: TImages.successFullyRegisterAnimation, 
-            title: TTexts.yourAccountCreatedTitle, 
-            subTitle: TTexts.yourAccountCreatedSubTitle, 
-            onPressed: () => AuthenticationRepository.instance.screenRedirect(),
+          // Update user data di Realtime Database setelah verifikasi
+          final user = await userRepository.fetchUserDetails();
+          await userRepository.saveUserRecord(user);
+          
+          Get.offAll(
+            () => SuccessScreen(
+              image: TImages.successFullyRegisterAnimation,
+              title: TTexts.yourAccountCreatedTitle,
+              subTitle: TTexts.yourAccountCreatedSubTitle,
+              onPressed: () => AuthenticationRepository.instance.screenRedirect(),
             ),
+            predicate: (route) => false,
           );
         }
+      } catch (e) {
+        timer.cancel();
+        TLoaders.errorSnackBar(title: 'Error', message: e.toString());
       }
-    );
-  }
+    }
+  );
+}
 
   // chech secara manual jika email terverifikasi
   checkEmailVerificationStatus() async{

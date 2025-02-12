@@ -3,13 +3,15 @@ import 'package:ecommerce_app/utils/formatters/formatter.dart';
 
 class UserModel {
   final String id;
-  final String username;
+  String username;
   final String email;
   // final String password;
   String firstName;
   String lastName;
   String phoneNumber;
   String profilePicture;
+  String jenkel;
+  String tglLahir;
 
   // Constructor for UserModel
   UserModel({
@@ -21,6 +23,8 @@ class UserModel {
     required this.lastName,
     required this.phoneNumber,
     required this.profilePicture,
+    required this.jenkel,
+    required this.tglLahir,
   });
 
   // Helper function for fullname
@@ -50,7 +54,9 @@ class UserModel {
       // password: "",
       email: "",
       phoneNumber: "",
-      profilePicture: ""
+      profilePicture: "",
+      jenkel: "",
+      tglLahir: "",
   );
 
   // Convert model to JSON structure for storing data in Firebase.
@@ -63,6 +69,8 @@ class UserModel {
       'Email': email,
       'PhoneNumber': phoneNumber,
       'ProfilePicture': profilePicture,
+      'Jenkel': jenkel,
+      'TglLahir': tglLahir
     };
   }
 
@@ -78,6 +86,8 @@ class UserModel {
       email: data['Email'] ?? "",
       phoneNumber: data['PhoneNumber'] ?? "",
       profilePicture: data['ProfilePicture'] ?? "",
+      jenkel: data['Jenkel'] ?? "",
+      tglLahir: data['TglLahir'] ?? "",
     );
   }
 }

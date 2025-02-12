@@ -15,6 +15,7 @@ class TProductAttributes extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Selected Product attribute Pricing  & Deskripsi
         TRoundedContainer(
@@ -63,49 +64,49 @@ class TProductAttributes extends StatelessWidget {
 
               // Deskripsi Variasi
               const TProductTitleText(
-                title: 'Ini tempat deskripsi dawdfgrfedwfgfdgfgffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+                title: 'Ini tempat deskripsi',
                 smallSize: true,
                 maxLines: 4,
               ),
             ],
           ),
         ),
-        const SizedBox(height: TSizes.defaultSpace,),
+        // const SizedBox(height: TSizes.defaultSpace,),
 
         // Attribute
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const TSectionHeading(title: 'Warna', showActionButton: false,),
-            const SizedBox(height: TSizes.spaceBtwItems / 2,),
+        // Column(
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: [
+        //     const TSectionHeading(title: 'Warna', showActionButton: false,),
+        //     const SizedBox(height: TSizes.spaceBtwItems / 2,),
 
-            Wrap(
-              spacing: 8,
-              children: [
-                TChoiceChip(text: 'Hijau',selected: true, onSelected: (value) {},),
-                TChoiceChip(text: 'Red',selected: false, onSelected: (value) {}),
-                TChoiceChip(text: 'Blue',selected: false, onSelected: (value) {}),
-              ],
-            )
-          ],
-        ),
+        //     Wrap(
+        //       spacing: 8,
+        //       children: [
+        //         TChoiceChip(text: 'Hijau',selected: true, onSelected: (value) {},),
+        //         TChoiceChip(text: 'Red',selected: false, onSelected: (value) {}),
+        //         TChoiceChip(text: 'Blue',selected: false, onSelected: (value) {}),
+        //       ],
+        //     )
+        //   ],
+        // ),
 
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const TSectionHeading(title: 'Ukuran', showActionButton: false,),
-            const SizedBox(height: TSizes.spaceBtwItems / 2,),
+        // Column(
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: [
+        //     const TSectionHeading(title: 'Ukuran', showActionButton: false,),
+        //     const SizedBox(height: TSizes.spaceBtwItems / 2,),
 
-            Wrap(
-              spacing: 8,
-              children: [
-                TChoiceChip(text: 'EU 41',selected: true, onSelected: (value) {}),
-                TChoiceChip(text: 'EU 42',selected: false, onSelected: (value) {}),
-                TChoiceChip(text: 'EU 43',selected: false, onSelected: (value) {}),
-              ],
-            )
-          ],
-        ),
+        //     Wrap(
+        //       spacing: 8,
+        //       children: [
+        //         TChoiceChip(text: 'EU 41',selected: true, onSelected: (value) {}),
+        //         TChoiceChip(text: 'EU 42',selected: false, onSelected: (value) {}),
+        //         TChoiceChip(text: 'EU 43',selected: false, onSelected: (value) {}),
+        //       ],
+        //     )
+        //   ],
+        // ),
       ],
     );
   }

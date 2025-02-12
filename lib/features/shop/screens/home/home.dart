@@ -7,6 +7,7 @@ import 'package:ecommerce_app/features/shop/screens/all_products/all_products.da
 import 'package:ecommerce_app/features/shop/screens/home/widgets/home_appbar.dart';
 import 'package:ecommerce_app/features/shop/screens/home/widgets/home_categories.dart';
 import 'package:ecommerce_app/features/shop/screens/home/widgets/home_promo_slider.dart';
+import 'package:ecommerce_app/features/shop/screens/search/search.dart';
 import 'package:ecommerce_app/utils/constants/image_strings.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const TPrimaryHeaderContainer(
+             TPrimaryHeaderContainer(
               child: Column(
                 children: [
                   // AppBar
@@ -33,6 +34,7 @@ class HomeScreen extends StatelessWidget {
                   // SearchBar
                   TSearchContainer(
                     text: 'Cari di Toko...',
+                    onTap: () => Get.to(() => const SearchScreen()),
                   ),
                   SizedBox(
                     height: TSizes.spaceBtwSections,

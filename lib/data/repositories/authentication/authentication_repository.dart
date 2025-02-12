@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecommerce_app/data/repositories/user/user_repository.dart';
 import 'package:ecommerce_app/features/authentication/screens/login/login.dart';
 import 'package:ecommerce_app/features/authentication/screens/onboarding/onboarding.dart';
@@ -8,6 +9,7 @@ import 'package:ecommerce_app/utils/exceptions/firebase_exceptions.dart';
 import 'package:ecommerce_app/utils/exceptions/format_exceptions.dart';
 import 'package:ecommerce_app/utils/exceptions/platform_exceptions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +24,8 @@ class AuthenticationRepository extends GetxController {
   // Variables
   final deviceStorage = GetStorage();
   final _auth = FirebaseAuth.instance;
+  final _db = FirebaseFirestore.instance;
+  final _rtdb = FirebaseDatabase.instance.ref();
 
   // Get authenticated user data
   User? get authUser => _auth.currentUser;
@@ -36,35 +40,71 @@ class AuthenticationRepository extends GetxController {
   }
 
   /// [Fungsi untuk menunjukan layar revelan]
-  screenRedirect() async{
+  // screenRedirect() async{
+  //   final user = _auth.currentUser;
+  //   if(user != null){
+  //     if(user.emailVerified){
+  //       Get.offAll(
+  //         () => const NavigationMenu(), 
+  //         transition: Transition.rightToLeftWithFade, 
+  //         duration: const Duration(milliseconds: 500), 
+  //         popGesture: true, 
+  //         curve: Curves.easeInOut
+  //       );
+  //     } else {
+  //       Get.offAll(() => VerifyEmailScreen(email: _auth.currentUser?.email,));
+  //       if (kDebugMode) {
+  //         print(user.getIdToken());
+  //       }
+  //     }
+  //   } else {
+
+  //     // if(kDebugMode){
+  //     //   print('====== Get Storage Auth Repo ======');
+  //     //   print(deviceStorage.read('IsFirstTime'));
+  //     // }
+
+  //     // Local storage
+  //     deviceStorage.writeIfNull('IsFirstTime', true);
+  //     // check apakah pertama kali membuka aplikasi
+  //     deviceStorage.read('IsFirstTime') != true 
+  //       ? Get.offAll(() => const LoginScreen()) 
+  //       : Get.offAll(const OnboardingScreen());
+  //   }
+  // }
+
+screenRedirect() async {
+  try {
     final user = _auth.currentUser;
-    if(user != null){
-      if(user.emailVerified){
-        Get.offAll(
-          () => const NavigationMenu(), 
-          transition: Transition.rightToLeftWithFade, 
-          duration: const Duration(milliseconds: 500), 
-          popGesture: true, 
-          curve: Curves.easeInOut
-        );
+    if (user != null) {
+      // Reload user untuk mendapatkan status verifikasi terbaru
+      await user.reload();
+      
+      if (user.emailVerified) {
+        // Pastikan data user ada di Realtime DB
+        final userRecord = await _db.collection("Users").doc(user.uid).get();
+        if (userRecord.exists) {
+          Get.offAll(
+            () => const NavigationMenu(),
+            transition: Transition.rightToLeftWithFade,
+            duration: const Duration(milliseconds: 500)
+          );
+        } else {
+          Get.offAll(() => const LoginScreen());
+        }
       } else {
-        Get.offAll(() => VerifyEmailScreen(email: _auth.currentUser?.email,));
+        Get.offAll(() => VerifyEmailScreen(email: user.email));
       }
     } else {
-
-      // if(kDebugMode){
-      //   print('====== Get Storage Auth Repo ======');
-      //   print(deviceStorage.read('IsFirstTime'));
-      // }
-
-      // Local storage
       deviceStorage.writeIfNull('IsFirstTime', true);
-      // check apakah pertama kali membuka aplikasi
-      deviceStorage.read('IsFirstTime') != true 
-        ? Get.offAll(() => const LoginScreen()) 
-        : Get.offAll(const OnboardingScreen());
+      deviceStorage.read('IsFirstTime') != true
+        ? Get.offAll(() => const LoginScreen())
+        : Get.offAll(() => const OnboardingScreen());
     }
+  } catch (e) {
+    Get.offAll(() => const LoginScreen());
   }
+}
 
   /* Email & Password Sign in*/ 
 
@@ -86,20 +126,54 @@ class AuthenticationRepository extends GetxController {
   }
 
   /// [EmailAuthentication] - Register
-  Future<UserCredential> registerWithEmailAndPassword(String email, String password) async{
+  // Future<UserCredential> registerWithEmailAndPassword(String email, String password) async{
+  //   try {
+  //     return await _auth.createUserWithEmailAndPassword(email: email, password: password);
+  //   } on FirebaseAuthException catch (e) {
+  //     throw TFirebaseAuthException(e.code).message;
+  //   } on FirebaseException catch (e) {
+  //     throw TFirebaseException(e.code).message;
+  //   } on FormatException catch (_) {
+  //     throw const TFormatException();
+  //   } on PlatformException catch (e) {
+  //     throw TPlatformException(e.code).message;
+  //   } catch (e) {
+  //     throw 'Something went wrong. Please try again.';
+  //   }
+  // }
+  Future<UserCredential> registerWithEmailAndPassword(String email, String password) async {
     try {
-      return await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      // Check for temporary/disposable email domains
+      if (email.contains('temp') || email.contains('disposable')) {
+        throw 'Mohon gunakan email yang valid';
+      }
+
+      // Create user account
+      final userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email, 
+        password: password
+      );
+
+      // Send verification email
+      await sendEmailVerification();
+
+      // Redirect to verification screen instead of saving data immediately
+      Get.offAll(() => const VerifyEmailScreen());
+
+      return userCredential;
+
     } on FirebaseAuthException catch (e) {
       throw TFirebaseAuthException(e.code).message;
     } on FirebaseException catch (e) {
       throw TFirebaseException(e.code).message;
-    } on FormatException catch (_) {
-      throw const TFormatException();
-    } on PlatformException catch (e) {
-      throw TPlatformException(e.code).message;
     } catch (e) {
       throw 'Something went wrong. Please try again.';
     }
+  }
+
+  Future<bool> isEmailVerified() async {
+    await _auth.currentUser?.reload();
+    return _auth.currentUser?.emailVerified ?? false;
   }
 
   /// [EmailAuthentication] - Mail Verification

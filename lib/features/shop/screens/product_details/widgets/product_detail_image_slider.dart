@@ -33,29 +33,29 @@ class TProductImageSlider extends StatelessWidget {
               )
             ),
             // Image Slider
-            Positioned(
-              right: 0,
-              // right: TSizes.defaultSpace,
-              bottom: 30,
-              left: TSizes.defaultSpace,
-              child: SizedBox(
-                height: 80,
-                child: ListView.separated(
-                  separatorBuilder: (_, __) => const SizedBox(width: TSizes.spaceBtwItems,), 
-                  itemCount: 6, 
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemBuilder: (_, index) => TRoundedImage(
-                  width: 80,
-                  backgroundColor: dark ? TColors.dark : TColors.white,
-                  border: Border.all(color: TColors.primary),
-                  padding: const EdgeInsets.all(TSizes.sm),
-                  imageUrl: TImages.productBaju2
-                  ), 
-                ),
-              ),
-            ),
+            // Positioned(
+            //   right: 0,
+            //   // right: TSizes.defaultSpace,
+            //   bottom: 30,
+            //   left: TSizes.defaultSpace,
+            //   child: SizedBox(
+            //     height: 80,
+            //     child: ListView.separated(
+            //       separatorBuilder: (_, __) => const SizedBox(width: TSizes.spaceBtwItems,), 
+            //       itemCount: 6, 
+            //       shrinkWrap: true,
+            //       scrollDirection: Axis.horizontal,
+            //       physics: const AlwaysScrollableScrollPhysics(),
+            //       itemBuilder: (_, index) => TRoundedImage(
+            //       width: 80,
+            //       backgroundColor: dark ? TColors.dark : TColors.white,
+            //       border: Border.all(color: TColors.primary),
+            //       padding: const EdgeInsets.all(TSizes.sm),
+            //       imageUrl: TImages.productBaju2
+            //       ), 
+            //     ),
+            //   ),
+            // ),
     
             // Appbar Icon
             const TAppBar(

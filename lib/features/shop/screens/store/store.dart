@@ -64,22 +64,22 @@ class StoreScreen extends StatelessWidget {
                           ),
 
                           // Feature Brands
-                          TSectionHeading(
-                            title: 'Brand Populer',
-                            onPressed: () => Get.to(() => const AllBrandsScreen()),
-                          ),
+                          // TSectionHeading(
+                          //   title: 'Brand Populer',
+                          //   onPressed: () => Get.to(() => const AllBrandsScreen()),
+                          // ),
                           const SizedBox(
                             height: TSizes.spaceBtwItems / 1.5,
                           ),
 
-                          TGridLayout(
-                              itemCount: 4,
-                              mainAxisExtent: 80,
-                              itemBuilder: (_, index) {
-                                return const TBrandCard(
-                                  showBorder: true,
-                                );
-                              }),
+                          // TGridLayout(
+                          //     itemCount: 4,
+                          //     mainAxisExtent: 80,
+                          //     itemBuilder: (_, index) {
+                          //       return const TBrandCard(
+                          //         showBorder: true,
+                          //       );
+                          //     }),
                         ],
                       ),
                     ),

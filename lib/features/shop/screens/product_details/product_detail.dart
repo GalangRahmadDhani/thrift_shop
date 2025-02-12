@@ -17,43 +17,43 @@ class ProductDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final dark = THelperFunctions.isDarkMode(context);
-    return Scaffold(
-      bottomNavigationBar: const TBottomAddToCart(),
+    return const Scaffold(
+      bottomNavigationBar: TBottomAddToCart(),
       body: SingleChildScrollView(
         child: Column(
           children: [
           // 1 - Product Image Slider
-            const TProductImageSlider(),
+             TProductImageSlider(),
 
           // 2 - Product Details
             Padding(
-              padding: const EdgeInsets.only(right: TSizes.defaultSpace, left: TSizes.defaultSpace, bottom: TSizes.defaultSpace),
+              padding: EdgeInsets.only(right: TSizes.defaultSpace, left: TSizes.defaultSpace, bottom: TSizes.defaultSpace),
               child: Column(
                 children: [
                   // Rating & Share
-                  const TRatingAndShare(),
+                  // TRatingAndShare(),
 
                   // Price, Title, Stock, & Brand
-                  const TProductMetaData(),
+                  TProductMetaData(),
 
                   // -- attribute
-                  const TProductAttributes(),
-                  const SizedBox(height: TSizes.spaceBtwSections,),
+                  TProductAttributes(),
+                  SizedBox(height: TSizes.spaceBtwSections,),
 
                   // -- Checkout Button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: (){}, 
-                      child: const Text('Checkout'),
-                    ),
-                  ),
-                  const SizedBox(height: TSizes.spaceBtwSections,),
+                  // SizedBox(
+                  //   width: double.infinity,
+                  //   child: ElevatedButton(
+                  //     onPressed: (){}, 
+                  //     child: const Text('Checkout'),
+                  //   ),
+                  // ),
+                  SizedBox(height: TSizes.spaceBtwSections,),
 
                   // Description
-                  const TSectionHeading(title: 'Deskripsi', showActionButton: false,),
-                  const SizedBox(height: TSizes.spaceBtwItems,),
-                  const ReadMoreText(
+                  TSectionHeading(title: 'Deskripsi', showActionButton: false,),
+                  SizedBox(height: TSizes.spaceBtwItems,),
+                  ReadMoreText(
                     'Ini adalah deskripsi produk, deskripsi di letakkan disini ',
                     trimLines: 2,
                     trimMode: TrimMode.Line,
@@ -64,16 +64,16 @@ class ProductDetailScreen extends StatelessWidget {
                   ),
 
                   // Reviews
-                  const Divider(),
-                  const SizedBox(height: TSizes.spaceBtwItems,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const TSectionHeading(title: 'Review(199)', showActionButton: false,),
-                      IconButton(icon: const Icon(Iconsax.arrow_right_3, size: 13,), onPressed: () => Get.to(() => const ProductReviewsScreen()),)
-                    ],
-                  ),
-                  const SizedBox(height: TSizes.spaceBtwSections,),
+                  Divider(),
+                  SizedBox(height: TSizes.spaceBtwItems,),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     const TSectionHeading(title: 'Review(199)', showActionButton: false,),
+                  //     IconButton(icon: const Icon(Iconsax.arrow_right_3, size: 13,), onPressed: () => Get.to(() => const ProductReviewsScreen()),)
+                  //   ],
+                  // ),
+                  // const SizedBox(height: TSizes.spaceBtwSections,),
                 ],
               ),
             ),
