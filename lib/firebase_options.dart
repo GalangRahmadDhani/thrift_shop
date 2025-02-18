@@ -57,6 +57,7 @@ class DefaultFirebaseOptions {
     appId: '1:566315516714:android:2c55fa15e5aeb490bf1453',
     messagingSenderId: '566315516714',
     projectId: 'thrift-shop-59b15',
+    databaseURL: 'https://thrift-shop-59b15-default-rtdb.firebaseio.com',
     storageBucket: 'thrift-shop-59b15.firebasestorage.app',
   );
 

@@ -3,7 +3,7 @@ import 'package:ecommerce_app/common/widgets/custom_shape/container/primary_head
 import 'package:ecommerce_app/common/widgets/list_tiles/settings_menu_tile.dart';
 import 'package:ecommerce_app/common/widgets/list_tiles/user_profile_tile.dart';
 import 'package:ecommerce_app/common/widgets/texts/section_heading.dart';
-import 'package:ecommerce_app/data/repositories/authentication/authentication_repository.dart';
+import 'package:ecommerce_app/data/repositories/authentication/user/authentication_repository.dart';
 import 'package:ecommerce_app/features/personalization/screens/address/address.dart';
 import 'package:ecommerce_app/features/personalization/screens/profile/profile.dart';
 import 'package:ecommerce_app/features/shop/screens/cart/cart.dart';
@@ -12,7 +12,6 @@ import 'package:ecommerce_app/utils/constants/colors.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:iconsax/iconsax.dart';
 
 class SettingsScreen extends StatelessWidget {

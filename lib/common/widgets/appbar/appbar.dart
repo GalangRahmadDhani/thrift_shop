@@ -14,6 +14,7 @@ class TAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.leadingOnPressed,
     this.showBackArrow = false,
+    this.backgroundColor,
   });
 
   final Widget? title;
@@ -21,24 +22,29 @@ class TAppBar extends StatelessWidget implements PreferredSizeWidget {
   final IconData? leadingIcon;
   final List<Widget>? actions;
   final VoidCallback? leadingOnPressed;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: TSizes.md),
-      child: AppBar(
-        automaticallyImplyLeading: false,
-        leading: showBackArrow
-            ? IconButton(
-                onPressed: () => Get.back(), icon: Icon(Iconsax.arrow_left, color: dark ? TColors.white : TColors.dark,))
-            : leadingIcon != null
-                ? IconButton(
-                    onPressed: leadingOnPressed, icon: Icon(leadingIcon),)
-                : null,
-        title: title,
-        actions: actions,
-      ),
+    return AppBar(
+      backgroundColor: backgroundColor,
+      automaticallyImplyLeading: false,
+      leading: showBackArrow
+          ? Padding(
+            padding: const EdgeInsets.only(left: TSizes.md),
+            child: IconButton(
+                onPressed: () => Get.back(), icon: Icon(Iconsax.arrow_left, color: dark ? TColors.white : TColors.dark,)),
+          )
+          : leadingIcon != null
+              ? Padding(
+                padding: const EdgeInsets.only(left: TSizes.md),
+                child: IconButton(
+                    onPressed: leadingOnPressed, icon: Icon(leadingIcon, color: dark ? TColors.white : TColors.dark,),),
+              )
+              : null,
+      title: title,
+      actions: actions,
     );
   }
 

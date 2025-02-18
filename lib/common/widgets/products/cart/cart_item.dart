@@ -6,25 +6,35 @@ import 'package:ecommerce_app/utils/constants/image_strings.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:ecommerce_app/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:ecommerce_app/features/authentication/User/models/cart_model.dart';
+import 'package:iconsax/iconsax.dart';
 
 class TCartItem extends StatelessWidget {
+  final CartModel cartItem;
+
   const TCartItem({
     super.key,
+    required this.cartItem,
   });
 
   @override
   Widget build(BuildContext context) {
+    final dark = THelperFunctions.isDarkMode(context);
+
     return Row(
       children: [
         // Image
         TRoundedImage(
-          imageUrl: TImages.productBaju1,
+          imageUrl: cartItem.image,
           width: 60,
           height: 60,
           padding: const EdgeInsets.all(TSizes.sm),
-          backgroundColor: THelperFunctions.isDarkMode(context) ? TColors.darkerGrey : TColors.light,
+          backgroundColor: dark ? TColors.darkerGrey : TColors.light,
+          isNetworkImage: true,
+          fit: BoxFit.cover,
         ),
-        const SizedBox(width: TSizes.spaceBtwItems,),
+
+        const SizedBox(width: TSizes.spaceBtwItems),
     
         // Title, Price, Size
         Expanded(
@@ -33,20 +43,25 @@ class TCartItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // brand
-              const TBrandTitleWithVerifiedIcon(title: 'Korleo'),
-              const Flexible(child: TProductTitleText (title: 'Anime Blue Design', maxLines: 1,)),
+              TBrandTitleWithVerifiedIcon(title: cartItem.productName),
+              Flexible(
+                child: TProductTitleText(
+                  title: cartItem.productName,
+                  maxLines: 1,
+                ),
+              ),
           
               // Atributes
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(text: 'warna ', style: Theme.of(context).textTheme.bodySmall,),
-                    TextSpan(text: 'Blue ', style: Theme.of(context).textTheme.bodyLarge,),
-                    TextSpan(text: 'Ukuran ', style: Theme.of(context).textTheme.bodySmall,),
-                    TextSpan(text: '42 ', style: Theme.of(context).textTheme.bodyLarge,),
-                  ]
-                )
-              )
+              // Text.rich(
+              //   TextSpan(
+              //     children: [
+              //       TextSpan(text: 'warna ', style: Theme.of(context).textTheme.bodySmall,),
+              //       TextSpan(text: 'Blue ', style: Theme.of(context).textTheme.bodyLarge,),
+              //       TextSpan(text: 'Ukuran ', style: Theme.of(context).textTheme.bodySmall,),
+              //       TextSpan(text: '42 ', style: Theme.of(context).textTheme.bodyLarge,),
+              //     ]
+              //   )
+              // )
           
             ],
           ),

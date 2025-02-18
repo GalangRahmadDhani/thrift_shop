@@ -3,6 +3,9 @@ import 'package:ecommerce_app/common/widgets/products/cart/cart_item.dart';
 import 'package:ecommerce_app/common/widgets/texts/product_price_text.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:ecommerce_app/features/shop/controllers/cart_controller.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class TCartItems extends StatelessWidget {
   const TCartItems({
@@ -14,36 +17,53 @@ class TCartItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      shrinkWrap: true,
-      separatorBuilder: (_, __) => const SizedBox(
-        height: TSizes.spaceBtwSections,
-      ),
-      itemCount: 2,
-      itemBuilder: (_, index) =>  Column(
-        children: [
-          const TCartItem(),
-          if (showAddRemoveButton) const SizedBox(height: TSizes.spaceBtwItems,),
+    final cartController = Get.find<CartController>();
+    final currencyFormatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
 
-          // Add Remove Buttons with total price
-          if (showAddRemoveButton)
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    // Extra Space
-                    SizedBox(
-                      width: 70,
+    return Obx(
+      () => ListView.separated(
+        shrinkWrap: true,
+        separatorBuilder: (_, __) => const SizedBox(height: TSizes.spaceBtwSections),
+        itemCount: cartController.cartItems.length,
+        itemBuilder: (_, index) => Column(
+          children: [
+            TCartItem(cartItem: cartController.cartItems[index]),
+            if (showAddRemoveButton) const SizedBox(height: TSizes.spaceBtwItems),
+
+            if (showAddRemoveButton)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const SizedBox(width: 70),
+                      TProductWithQuantityAddRemoveButton(
+                        quantity: cartController.cartItems[index].quantity,
+                        onIncrement: () => cartController.updateItemQuantity(
+                          cartController.cartItems[index].productId, 
+                          1
+                        ),
+                        onDecrement: () => cartController.updateItemQuantity(
+                          cartController.cartItems[index].productId, 
+                          -1
+                        ),
+                      ),
+                    ],
+                  ),
+                  TProductPriceText(
+                    price: currencyFormatter.format(
+                      cartController.cartItems[index].price * 
+                      cartController.cartItems[index].quantity
                     ),
-                    // add remove buttons
-                    TProductWithQuantityAddRemoveButton(),
-                  ],
-                ),
-                TProductPriceText(price: ' 300.000')
-              ],
-            )
-        ],
+                  )
+                ],
+              )
+          ],
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/common/widgets/icons/circular_icon.dart';
+import 'package:ecommerce_app/features/authentication/User/models/product_model.dart';
 import 'package:ecommerce_app/utils/constants/colors.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:ecommerce_app/utils/helpers/helper_functions.dart';
@@ -6,7 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 class TBottomAddToCart extends StatelessWidget {
-  const TBottomAddToCart({super.key});
+  final ProductModel product;
+
+  const TBottomAddToCart({
+    super.key,
+    required this.product,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +51,14 @@ class TBottomAddToCart extends StatelessWidget {
             ],
           ),
           ElevatedButton(
-            onPressed: () {}, 
+            onPressed: product.stock > 0 ? () {} : null,
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(TSizes.md),
-              backgroundColor: TColors.black,
-              side: const BorderSide(color: TColors.black)
+              backgroundColor: product.stock > 0 ? TColors.black : Colors.grey,
+              side: BorderSide(color: product.stock > 0 ? TColors.black : Colors.grey)
             ),
-            child: const Text(
-              'Add to Cart',
+            child: Text(
+              product.stock > 0 ? 'Add to Cart' : 'Out of Stock',
             ),
           ),
         ],

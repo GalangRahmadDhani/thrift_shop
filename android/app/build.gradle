@@ -7,6 +7,9 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
+// dependencies{
+//     implementation 'com.google.firebase:firebase-admin:9.4.3'
+// }
 
 android {
     namespace = "com.thift_shop.android"

@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class TRoundedImage extends StatelessWidget {
   const TRoundedImage({
@@ -43,10 +44,22 @@ class TRoundedImage extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: applyImageRadius ? BorderRadius.circular(borderRadius) : BorderRadius.zero,
-          child: Image(
-            image: isNetworkImage ? NetworkImage(imageUrl) : AssetImage(imageUrl) as ImageProvider,
-            fit: fit,
-          ),
+          child: isNetworkImage 
+            ? CachedNetworkImage(
+                imageUrl: imageUrl,
+                fit: fit,
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, url, error) => const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                ),
+              )
+            : Image(
+                image: AssetImage(imageUrl),
+                fit: fit,
+              ),
         ),
       ),
     );

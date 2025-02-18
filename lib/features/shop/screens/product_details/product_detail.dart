@@ -3,58 +3,61 @@ import 'package:ecommerce_app/features/shop/screens/product_details/widgets/bott
 import 'package:ecommerce_app/features/shop/screens/product_details/widgets/product_attributes.dart';
 import 'package:ecommerce_app/features/shop/screens/product_details/widgets/product_detail_image_slider.dart';
 import 'package:ecommerce_app/features/shop/screens/product_details/widgets/product_meta_data.dart';
-import 'package:ecommerce_app/features/shop/screens/product_details/widgets/rating_and_share.dart';
-import 'package:ecommerce_app/features/shop/screens/product_reviews/product_reviews.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
+import 'package:ecommerce_app/features/authentication/User/models/product_model.dart';
+import 'package:intl/intl.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({super.key});
+  final ProductModel product;
+
+  const ProductDetailScreen({
+    Key? key,
+    required this.product,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // final dark = THelperFunctions.isDarkMode(context);
-    return const Scaffold(
-      bottomNavigationBar: TBottomAddToCart(),
+    final currencyFormatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    );
+
+    return Scaffold(
+      bottomNavigationBar: TBottomAddToCart(product: product),
       body: SingleChildScrollView(
         child: Column(
           children: [
-          // 1 - Product Image Slider
-             TProductImageSlider(),
+            // 1 - Product Image Slider
+            TProductImageSlider(images: product.images),
 
-          // 2 - Product Details
+            // 2 - Product Details
             Padding(
-              padding: EdgeInsets.only(right: TSizes.defaultSpace, left: TSizes.defaultSpace, bottom: TSizes.defaultSpace),
+              padding: const EdgeInsets.all(TSizes.defaultSpace),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Rating & Share
-                  // TRatingAndShare(),
-
                   // Price, Title, Stock, & Brand
-                  TProductMetaData(),
+                  TProductMetaData(
+                    product: product,
+                    priceFormatted: currencyFormatter.format(product.price),
+                    salePriceFormatted: product.isSale ? 
+                      currencyFormatter.format(product.salePrice) : null,
+                  ),
 
-                  // -- attribute
-                  TProductAttributes(),
-                  SizedBox(height: TSizes.spaceBtwSections,),
-
-                  // -- Checkout Button
-                  // SizedBox(
-                  //   width: double.infinity,
-                  //   child: ElevatedButton(
-                  //     onPressed: (){}, 
-                  //     child: const Text('Checkout'),
-                  //   ),
-                  // ),
-                  SizedBox(height: TSizes.spaceBtwSections,),
+                  // Attributes if any
+                  if (product.sizes.isNotEmpty) ...[
+                    const TProductAttributes(),
+                    const SizedBox(height: TSizes.spaceBtwSections,),
+                  ],
 
                   // Description
                   TSectionHeading(title: 'Deskripsi', showActionButton: false,),
                   SizedBox(height: TSizes.spaceBtwItems,),
                   ReadMoreText(
-                    'Ini adalah deskripsi produk, deskripsi di letakkan disini ',
+                    product.description,
                     trimLines: 2,
                     trimMode: TrimMode.Line,
                     trimCollapsedText: ' Show more',
@@ -66,14 +69,6 @@ class ProductDetailScreen extends StatelessWidget {
                   // Reviews
                   Divider(),
                   SizedBox(height: TSizes.spaceBtwItems,),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     const TSectionHeading(title: 'Review(199)', showActionButton: false,),
-                  //     IconButton(icon: const Icon(Iconsax.arrow_right_3, size: 13,), onPressed: () => Get.to(() => const ProductReviewsScreen()),)
-                  //   ],
-                  // ),
-                  // const SizedBox(height: TSizes.spaceBtwSections,),
                 ],
               ),
             ),

@@ -5,22 +5,25 @@ import 'package:ecommerce_app/utils/constants/colors.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:ecommerce_app/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:ecommerce_app/features/shop/controllers/product_controller.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ProductController>();
     final dark = THelperFunctions.isDarkMode(context);
 
     return Scaffold(
-      appBar:  TAppBar(
+      appBar: TAppBar(
         showBackArrow: true,
-        title: Text('Cari Produk'),
+        title: const Text('Cari Produk'),
         actions: [
           TCartCounterIcon(
-            onPressed: (){},
+            onPressed: () {}, // Add empty callback instead of null
             iconColor: TColors.black,
           )
         ],
@@ -32,6 +35,8 @@ class SearchScreen extends StatelessWidget {
             children: [
               /// Search TextField
               TextFormField(
+                controller: controller.searchController,
+                onChanged: (query) => controller.searchProducts(query),
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Iconsax.search_normal),
                   hintText: 'Cari di Toko...',
@@ -55,26 +60,42 @@ class SearchScreen extends StatelessWidget {
               
               const SizedBox(height: TSizes.spaceBtwItems),
 
-              /// Results Count
-              Text(
-                '12 hasil ditemukan',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: TSizes.spaceBtwSections),
+              /// Results Count & Grid
+              Obx(() {
+                if (controller.isSearching.value) {
+                  return Column(
+                    children: [
+                      // Results count
+                      Text(
+                        '${controller.searchResults.length} hasil ditemukan',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: TSizes.spaceBtwSections),
 
-              /// Search Results Grid
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 8,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: TSizes.gridViewSpacing,
-                  crossAxisSpacing: TSizes.gridViewSpacing,
-                  mainAxisExtent: 288,
-                ),
-                itemBuilder: (_, index) => const TProductCardVertical(),
-              ),
+                      // Search Results Grid
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: controller.searchResults.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: TSizes.gridViewSpacing,
+                          crossAxisSpacing: TSizes.gridViewSpacing,
+                          mainAxisExtent: 288,
+                        ),
+                        itemBuilder: (_, index) => TProductCardVertical(
+                          product: controller.searchResults[index],
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                
+                // Show empty state or initial state
+                return const Center(
+                  child: Text('Cari produk yang Anda inginkan'),
+                );
+              }),
             ],
           ),
         ),

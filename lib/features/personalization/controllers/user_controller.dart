@@ -1,8 +1,8 @@
 import 'package:ecommerce_app/common/widgets/change/re_auth_login_form.dart';
-import 'package:ecommerce_app/data/repositories/authentication/authentication_repository.dart';
-import 'package:ecommerce_app/data/repositories/user/user_repository.dart';
-import 'package:ecommerce_app/features/authentication/models/user_model.dart';
-import 'package:ecommerce_app/features/authentication/screens/login/login.dart';
+import 'package:ecommerce_app/data/repositories/authentication/user/authentication_repository.dart';
+import 'package:ecommerce_app/data/repositories/user%20&%20admin/user_repository.dart';
+import 'package:ecommerce_app/features/authentication/User/models/user_model.dart';
+import 'package:ecommerce_app/features/authentication/User/screens/login/login.dart';
 import 'package:ecommerce_app/service/cloudinary_service.dart';
 import 'package:ecommerce_app/utils/constants/image_strings.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
@@ -11,12 +11,8 @@ import 'package:ecommerce_app/utils/popups/full_screen_loader.dart';
 import 'package:ecommerce_app/utils/popups/loaders.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 
 class UserController extends GetxController {
   static UserController get instance => Get.find();
@@ -56,12 +52,12 @@ void refreshUserData() {
   // Save user record from any registration provider
   Future<void> saveUserRecord(UserCredential? userCredentials) async {
     try {
-      // First update Rx user end then check if user data is already stored. If not store new data
+      // First update Rx user and then check if user data is already stored. If not, store new data
       await fetchUserRecord();
 
       // If no record already stored
-      if(user.value.id.isEmpty){
-        if(userCredentials != null) {
+      if (user.value.id.isEmpty) {
+        if (userCredentials != null) {
           // Convert name to first name and last name
           final nameParts = UserModel.nameParts(userCredentials.user!.displayName ?? '');
           final username = UserModel.generateUsername(userCredentials.user!.displayName ?? '');
@@ -70,14 +66,14 @@ void refreshUserData() {
           final user = UserModel(
             id: userCredentials.user!.uid,
             firstName: nameParts[0],
-            lastName: nameParts.length > 1 ? nameParts.sublist(1).join('') : '',
+            lastName: nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '',
             username: username,
-            // password: ,
             email: userCredentials.user!.email ?? '',
             phoneNumber: userCredentials.user!.phoneNumber ?? '',
             profilePicture: userCredentials.user!.photoURL ?? '',
             jenkel: '',
             tglLahir: '',
+            role: '',
           );
 
           // Save user data

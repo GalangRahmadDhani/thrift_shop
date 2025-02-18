@@ -1,13 +1,10 @@
 import 'package:ecommerce_app/common/widgets/appbar/appbar.dart';
-import 'package:ecommerce_app/features/authentication/controllers/user/update_name_controller.dart';
-import 'package:ecommerce_app/features/authentication/controllers/user/update_username_controller.dart';
+import 'package:ecommerce_app/features/authentication/User/controllers/user/update_username_controller.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:ecommerce_app/utils/constants/text_strings.dart';
 import 'package:ecommerce_app/utils/validators/validation.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:iconsax/iconsax.dart';
 
 class ChangeUsername extends StatelessWidget {

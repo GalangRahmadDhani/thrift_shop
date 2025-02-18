@@ -79,22 +79,22 @@ class TProductCardHorizontal extends StatelessWidget {
                 padding: const EdgeInsets.only(top: TSizes.sm, left: TSizes.sm,),
                 child: Column(
                   children: [
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TProductTitleText(title: 'Anime Blue Design', smallSize: true,),
-                        SizedBox(height: TSizes.spaceBtwItems,),
-                          TBrandTitleWithVerifiedIcon(title: 'Nike'),
-                      ],
-                    ),
+                    // const Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     TProductTitleText(title: 'Anime Blue Design', smallSize: true,),
+                    //     SizedBox(height: TSizes.spaceBtwItems,),
+                    //       TBrandTitleWithVerifiedIcon(title: 'Nike'),
+                    //   ],
+                    // ),
 
-                    const Spacer(),
+                    // const Spacer(),
                 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // Pricing
-                        const Flexible(child: TProductPriceText(price: '300.000')),
+                        // const Flexible(child: TProductPriceText(price: '300.000')),
 
                         // Add to cart
                         Container(

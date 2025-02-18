@@ -5,14 +5,21 @@ import 'package:ecommerce_app/common/widgets/texts/section_heading.dart';
 import 'package:ecommerce_app/utils/constants/image_strings.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:ecommerce_app/features/shop/controllers/product_controller.dart';
+import 'package:get/get.dart';
 
 class TCategoryTab extends StatelessWidget {
+  final String? category;
+  
   const TCategoryTab({
     super.key,
+    this.category,
   });
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ProductController>();
+
     return ListView(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -43,7 +50,27 @@ class TCategoryTab extends StatelessWidget {
             TSectionHeading(title: 'Anda Mungkin Suka', onPressed: (){},),
             const SizedBox(height: TSizes.spaceBtwItems,),
       
-            TGridLayout(itemCount: 4, itemBuilder: (_, index) => const TProductCardVertical()),
+            // Products Grid with Obx
+            Obx(() {
+              if (controller.loading.value) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              final products = category != null 
+                ? controller.products.where((p) => p.category == category).toList()
+                : controller.products;
+
+              if (products.isEmpty) {
+                return const Center(child: Text('No products found'));
+              }
+
+              return TGridLayout(
+                itemCount: products.length,
+                itemBuilder: (_, index) => TProductCardVertical(
+                  product: products[index],
+                ),
+              );
+            }),
             const SizedBox(height: TSizes.spaceBtwSections,),
           ],
         ),

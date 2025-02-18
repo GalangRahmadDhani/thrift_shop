@@ -3,6 +3,7 @@ import 'package:ecommerce_app/common/widgets/images/t_circular_image.dart';
 import 'package:ecommerce_app/common/widgets/texts/brand_name_verified_icon.dart';
 import 'package:ecommerce_app/common/widgets/texts/product_price_text.dart';
 import 'package:ecommerce_app/common/widgets/texts/product_title_text.dart';
+import 'package:ecommerce_app/features/authentication/User/models/product_model.dart';
 import 'package:ecommerce_app/utils/constants/colors.dart';
 import 'package:ecommerce_app/utils/constants/enums.dart';
 import 'package:ecommerce_app/utils/constants/image_strings.dart';
@@ -11,68 +12,77 @@ import 'package:ecommerce_app/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 
 class TProductMetaData extends StatelessWidget {
-  const TProductMetaData({super.key});
+  final ProductModel product;
+  final String priceFormatted;
+  final String? salePriceFormatted;
+
+  const TProductMetaData({
+    super.key,
+    required this.product,
+    required this.priceFormatted,
+    this.salePriceFormatted,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunctions.isDarkMode(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Price & Sale Price
         Row(
           children: [
-            // Sale Tag
-            TRoundedContainer(
-              radius: TSizes.sm,
-              backgroundColor: TColors.secondary.withOpacity(0.8),
-              padding: const EdgeInsets.symmetric(horizontal: TSizes.sm, vertical: TSizes.xs),
-              child: Text(
-                '25%',
-                style: Theme.of(context).textTheme.labelLarge!.apply(color: TColors.white), 
+            // Sale Price
+            if (product.isSale && salePriceFormatted != null) ...[
+              Text(
+                salePriceFormatted!,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-            ),
-            const SizedBox(width: TSizes.spaceBtwItems,),
-
-            // Price
-            Text(
-              '\Rp 150.000',
-              style: Theme.of(context).textTheme.titleSmall!.apply(decoration: TextDecoration.lineThrough),
-            ),
-            const SizedBox(width: TSizes.spaceBtwItems,),
-            const TProductPriceText(price: '112.000', isLarge: true,),
+              const SizedBox(width: TSizes.spaceBtwItems),
+              // Original Price
+              Text(
+                priceFormatted,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  decoration: TextDecoration.lineThrough,
+                  color: Colors.grey,
+                ),
+              ),
+            ] else
+              Text(
+                priceFormatted,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
           ],
         ),
-        const SizedBox(width: TSizes.spaceBtwItems / 1.5,),
+
+        const SizedBox(height: TSizes.spaceBtwItems),
 
         // Title
-        const TProductTitleText(title: 'Baju Anime Keren Viral'),
-        const SizedBox(width: TSizes.spaceBtwItems / 1.5,),
+        Text(product.name, style: Theme.of(context).textTheme.titleMedium),
+        
+        const SizedBox(height: TSizes.spaceBtwItems),
 
         // Stock Status
         Row(
           children: [
-            const TProductTitleText(title: 'Status'),
-            const SizedBox(width: TSizes.spaceBtwItems / 1.5,),
+            const TProductTitleText(title: 'Status: '),
             Text(
-              'Stock Tersedia', style: Theme.of(context).textTheme.titleMedium,
+              product.stock > 0 ? 'In Stock' : 'Out of Stock',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: product.stock > 0 ? Colors.green : Colors.red,
+              ),
             ),
           ],
         ),
-        const SizedBox(width: TSizes.spaceBtwItems / 1.5,),
+
+        const SizedBox(height: TSizes.spaceBtwItems),
 
         // Brand
         Row(
           children: [
-            TCircularImage(
-              image: TImages.cosmeticsIcon,
-              width: 32,
-              height: 32,
-              overlayColor: dark ? TColors.white : TColors.black,
-            ),
-            const TBrandTitleWithVerifiedIcon(title: 'G-Trifht', brandTextSize: TextSizes.medium,),
+            const TProductTitleText(title: 'Brand: '),
+            TBrandTitleWithVerifiedIcon(title: product.brand),
           ],
-        )
+        ),
       ],
     );
   }

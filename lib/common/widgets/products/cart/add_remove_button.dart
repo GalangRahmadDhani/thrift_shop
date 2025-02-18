@@ -8,33 +8,39 @@ import 'package:iconsax/iconsax.dart';
 class TProductWithQuantityAddRemoveButton extends StatelessWidget {
   const TProductWithQuantityAddRemoveButton({
     super.key,
+    required this.quantity,
+    this.onIncrement,
+    this.onDecrement,
   });
+
+  final int quantity;
+  final VoidCallback? onIncrement;
+  final VoidCallback? onDecrement;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        TCircularIcon(
-        icon: Iconsax.minus,
-        width: 32,
-        height: 32,
-        size: TSizes.md,
-        color: THelperFunctions.isDarkMode(context) ? TColors.white : TColors.black,
-        backgroundColor: THelperFunctions.isDarkMode(context) ? TColors.darkerGrey : TColors.light,
+        IconButton(
+          onPressed: onDecrement,
+          icon: const Icon(
+            Iconsax.minus_cirlce,
+            color: TColors.darkGrey,
+          ),
         ),
-        const SizedBox(width: TSizes.spaceBtwItems,),
-        Text('2', style: Theme.of(context).textTheme.titleSmall,),
-        const SizedBox(width: TSizes.spaceBtwItems,),
-        const TCircularIcon(
-          icon: Iconsax.add,
-          width: 32,
-          height: 32,
-          size: TSizes.md,
-          color: TColors.white,
-          backgroundColor: TColors.primary,
+        Text(
+          quantity.toString(),
+          style: Theme.of(context).textTheme.titleSmall,
         ),
-      ]
+        IconButton(
+          onPressed: onIncrement,
+          icon: const Icon(
+            Iconsax.add_circle,
+            color: TColors.darkGrey,
+          ),
+        ),
+      ],
     );
   }
 }

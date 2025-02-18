@@ -2,7 +2,6 @@ import 'package:ecommerce_app/features/personalization/controllers/user_controll
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:ecommerce_app/utils/constants/text_strings.dart';
 import 'package:ecommerce_app/utils/validators/validation.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';

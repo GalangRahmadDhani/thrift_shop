@@ -2,7 +2,10 @@ import 'package:ecommerce_app/common/widgets/layouts/grid_layout.dart';
 import 'package:ecommerce_app/common/widgets/products/product_cards/product_card_vertical.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:ecommerce_app/features/shop/controllers/product_controller.dart';
+import 'package:ecommerce_app/features/authentication/User/models/product_model.dart';
 
 class TSortableProducts extends StatelessWidget {
   const TSortableProducts({
@@ -11,6 +14,8 @@ class TSortableProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ProductController>();
+
     return Column(
       children: [
         // Dropdown
@@ -31,10 +36,22 @@ class TSortableProducts extends StatelessWidget {
         const SizedBox(height: TSizes.spaceBtwItems,),
     
         // Products
-        TGridLayout(
-          itemCount: 6,
-          itemBuilder: (_, index) => const TProductCardVertical(),
-        )
+        Obx((){
+          if (controller.loading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (controller.products.isEmpty) {
+            return const Center(child: Text('No products available'));
+          }
+
+          return TGridLayout(
+            itemCount: controller.products.length,
+            itemBuilder: (_, index) => TProductCardVertical(
+              product: controller.products[index],
+            ),
+          );
+        }),
       ],
     );
   }
