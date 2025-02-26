@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:ecommerce_app/features/shop/controllers/product_controller.dart';
-import 'package:ecommerce_app/features/authentication/User/models/product_model.dart';
 
 class TSortableProducts extends StatelessWidget {
   const TSortableProducts({

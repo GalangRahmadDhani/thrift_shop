@@ -5,7 +5,7 @@ import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:ecommerce_app/features/shop/controllers/product_controller.dart';
 
 class ProductSearchBar extends StatelessWidget {
-  const ProductSearchBar({Key? key}) : super(key: key);
+  const ProductSearchBar({super.key});
 
   @override
   Widget build(BuildContext context) {

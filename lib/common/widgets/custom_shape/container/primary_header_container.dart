@@ -16,7 +16,7 @@ class TPrimaryHeaderContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return TCurvedEdgeWidget(
       child: Container(
-        color: TColors.primary,
+        color: TColors.krem,
         padding: const EdgeInsets.all(0),
         // if [size.isInfinity : is not true. In Stack] error occurred -> Read README.md file
         child: Stack(

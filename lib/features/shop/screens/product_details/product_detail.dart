@@ -13,9 +13,9 @@ class ProductDetailScreen extends StatelessWidget {
   final ProductModel product;
 
   const ProductDetailScreen({
-    Key? key,
+    super.key,
     required this.product,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,21 +54,21 @@ class ProductDetailScreen extends StatelessWidget {
                   ],
 
                   // Description
-                  TSectionHeading(title: 'Deskripsi', showActionButton: false,),
-                  SizedBox(height: TSizes.spaceBtwItems,),
+                  const TSectionHeading(title: 'Deskripsi', showActionButton: false,),
+                  const SizedBox(height: TSizes.spaceBtwItems,),
                   ReadMoreText(
                     product.description,
                     trimLines: 2,
                     trimMode: TrimMode.Line,
                     trimCollapsedText: ' Show more',
                     trimExpandedText: ' less',
-                    moreStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
-                    lessStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+                    moreStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+                    lessStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
                   ),
 
                   // Reviews
-                  Divider(),
-                  SizedBox(height: TSizes.spaceBtwItems,),
+                  const Divider(),
+                  const SizedBox(height: TSizes.spaceBtwItems,),
                 ],
               ),
             ),

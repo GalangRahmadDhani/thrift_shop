@@ -1,6 +1,5 @@
 import 'package:ecommerce_app/features/personalization/screens/settings/settings.dart';
 import 'package:ecommerce_app/features/shop/screens/home/home.dart';
-import 'package:ecommerce_app/features/shop/screens/wishlist/wishlist.dart';
 import 'package:ecommerce_app/utils/constants/colors.dart';
 import 'package:ecommerce_app/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -24,13 +23,9 @@ class NavigationMenu extends StatelessWidget {
           onDestinationSelected: (index) => controller.selectedIndex.value = index,
           backgroundColor: darkMode ? TColors.black : Colors.white,
           indicatorColor: darkMode ? TColors.white.withOpacity(0.1) : TColors.black.withOpacity(0.1),
-
-
           destinations: const [
-           NavigationDestination(icon: Icon(Iconsax.home), label: 'Home'),
-           NavigationDestination(icon: Icon(Iconsax.heart), label: 'Wishlist'),
-           NavigationDestination(icon: Icon(Iconsax.user), label: 'Profile'),
-          //  NavigationDestination(icon: Icon(Iconsax.shop), label: 'Toko'),
+            NavigationDestination(icon: Icon(Iconsax.home), label: 'Home'),
+            NavigationDestination(icon: Icon(Iconsax.user), label: 'Profile'),
           ]
         ),
       ),
@@ -39,13 +34,20 @@ class NavigationMenu extends StatelessWidget {
   }
 }
 
-class NavigationController extends GetxController{
+class NavigationController extends GetxController {
+  // Make sure initial value is 0
   final Rx<int> selectedIndex = 0.obs;
 
+  // Make sure screens list matches with navigation destinations
   final screens = [
     const HomeScreen(),
-    const WishlistScreen(),
-    const SettingsScreen(),  
-    // const StoreScreen(),
+    const SettingsScreen(),
   ];
+
+  @override
+  void onInit() {
+    // Reset to first index when controller initializes
+    selectedIndex.value = 0;
+    super.onInit();
+  }
 }

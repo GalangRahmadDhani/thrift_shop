@@ -2,6 +2,7 @@ import 'package:ecommerce_app/utils/constants/colors.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:ecommerce_app/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class TVerticalImageText extends StatelessWidget {
   const TVerticalImageText({
@@ -38,13 +39,18 @@ class TVerticalImageText extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
               ),
               child: Center(
-                child: Image(
-                  image: AssetImage(
-                    image
-                  ), 
-                  fit: BoxFit.cover, 
-                  color: dark ? TColors.white : TColors.dark,
-                ),
+                child: image.startsWith('http')
+                    ? CachedNetworkImage(
+                        imageUrl: image,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                      )
+                    : Image.asset(
+                        image,
+                        fit: BoxFit.cover,
+                        color: dark ? TColors.white : TColors.dark,
+                      ),
               ),
             ),
             // Text
@@ -57,6 +63,7 @@ class TVerticalImageText extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelMedium!.apply(color: textColor),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
             ),
           ],

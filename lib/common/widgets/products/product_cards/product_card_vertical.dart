@@ -1,15 +1,15 @@
 import 'package:ecommerce_app/common/styles/shadows.dart';
 import 'package:ecommerce_app/common/widgets/custom_shape/container/rounded_container.dart';
 import 'package:ecommerce_app/common/widgets/icons/circular_icon.dart';
-import 'package:ecommerce_app/common/widgets/images/t_rounded_image.dart';
 import 'package:ecommerce_app/common/widgets/texts/brand_name_verified_icon.dart';
 import 'package:ecommerce_app/common/widgets/texts/product_price_text.dart';
-import 'package:ecommerce_app/common/widgets/texts/product_title_text.dart';
+import 'package:ecommerce_app/features/authentication/Admin/Brand%20&%20Category/models/brand_model.dart';
 import 'package:ecommerce_app/features/authentication/User/models/cart_model.dart';
 import 'package:ecommerce_app/features/authentication/User/models/product_model.dart';
+import 'package:ecommerce_app/features/shop/controllers/brand_controller.dart';
+import 'package:ecommerce_app/features/shop/controllers/product_controller.dart';
 import 'package:ecommerce_app/features/shop/screens/product_details/product_detail.dart';
 import 'package:ecommerce_app/utils/constants/colors.dart';
-import 'package:ecommerce_app/utils/constants/image_strings.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:ecommerce_app/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +27,12 @@ class TProductCardVertical extends StatelessWidget {
     required this.product,
   });
 
+  TextAlign _getTextAlignment(String text) {
+    // Define threshold for what constitutes "short" text
+    const int shortTextThreshold = 15;
+    return text.length <= shortTextThreshold ? TextAlign.center : TextAlign.left;
+  }
+
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
@@ -36,9 +42,10 @@ class TProductCardVertical extends StatelessWidget {
       decimalDigits: 0,
     );
     final cartController = Get.find<CartController>();
+    final controller = Get.put(ProductController());
+    final brandController = Get.put(BrandController());
 
     void addToCart() {
-      // Get current user ID
       final userId = AuthenticationRepository.instance.authUser?.uid;
       if (userId == null) {
         Get.snackbar(
@@ -55,10 +62,10 @@ class TProductCardVertical extends StatelessWidget {
         productId: product.id,
         productName: product.name,
         price: product.isSale 
-            ? (product.salePrice ?? 0).toDouble()  // Convert int? to double
-            : (product.price ?? 0).toDouble(),     // Convert int? to double
+            ? (product.salePrice ?? 0).toDouble()
+            : (product.price ?? 0).toDouble(),
         image: product.images.isNotEmpty ? product.images[0] : '',
-        userId: userId, // Using actual user ID from authentication
+        userId: userId,
       );
 
       cartController.addToCart(cartItem).then((_) {
@@ -100,7 +107,6 @@ class TProductCardVertical extends StatelessWidget {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // Thumbnail Image
                   ClipRRect(
                     borderRadius: BorderRadius.circular(TSizes.productImageRadius),
                     child: product.images.isNotEmpty 
@@ -135,7 +141,6 @@ class TProductCardVertical extends StatelessWidget {
                         ),
                   ),
 
-                  // Sale Tag
                   if (product.isSale && product.discountPercentage != null)
                     Positioned(
                       top: 12,
@@ -157,7 +162,6 @@ class TProductCardVertical extends StatelessWidget {
                       ),
                     ),
 
-                  // Favourite Icon
                   const Positioned(
                     top: 0,
                     right: 0,
@@ -173,18 +177,41 @@ class TProductCardVertical extends StatelessWidget {
             // Product Details
             const SizedBox(height: TSizes.spaceBtwItems / 2),
             Padding(
-              padding: const EdgeInsets.only(left: TSizes.sm),
+              padding: const EdgeInsets.symmetric(horizontal: TSizes.sm),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TProductTitleText(
-                    title: product.name,
-                    smallSize: true,
+                  // Product Title with dynamic alignment
+                  SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      product.name,
+                      style: Theme.of(context).textTheme.titleSmall,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: _getTextAlignment(product.name),
+                    ),
                   ),
                   const SizedBox(height: TSizes.spaceBtwItems / 2),
-                  TBrandTitleWithVerifiedIcon(title: product.brand),
+                  // Brand name with dynamic alignment
+                  StreamBuilder<List<BrandModel>>(
+                    stream: brandController.getBrandById(product.brandId),
+                    builder: (context, snapshot) {
+                      String brandName = 'Unknown Brand';
+                      bool isFeatured = false; // Add this
+                      if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                        final brand = snapshot.data!.first;
+                        brandName = brand.name;
+                        isFeatured = brand.isFeatured ?? false; // Add this
+                      }
+                      return TBrandNameWithVerifiedIcon( // Replace Text widget with this
+                        brandName: brandName,
+                        brandTextAlignment: _getTextAlignment(brandName),
+                        showVerifiedIcon: isFeatured,
+                      );
+                    },
+                  ),
                 ],
-              )
+              ),
             ),
 
             const Spacer(),
@@ -195,7 +222,6 @@ class TProductCardVertical extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Price
                   Padding(
                     padding: const EdgeInsets.only(left: TSizes.sm),
                     child: Column(
@@ -220,7 +246,6 @@ class TProductCardVertical extends StatelessWidget {
                     ),
                   ),
 
-                  // Replace the Container with GestureDetector
                   GestureDetector(
                     onTap: addToCart,
                     child: Container(

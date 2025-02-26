@@ -4,15 +4,22 @@ import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:ecommerce_app/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import '../../../../../features/authentication/User/models/address_model.dart';
 
 class TSingleAddress extends StatelessWidget {
-  const TSingleAddress({super.key, required this.selectedAddress});
+  const TSingleAddress({
+    super.key,
+    required this.selectedAddress,
+    required this.address,
+  });
 
   final bool selectedAddress;
+  final AddressModel address;
 
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
+    
     return TRoundedContainer(
       padding: const EdgeInsets.all(TSizes.md),
       width: double.infinity,
@@ -23,28 +30,31 @@ class TSingleAddress extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            top: 0,
             right: 5,
+            top: 0,
             child: Icon(
               selectedAddress ? Iconsax.tick_circle5 : null,
-              color: selectedAddress ? dark ? TColors.light : TColors.dark.withOpacity(0.2) : null,
+              color: selectedAddress ? dark ? TColors.light : TColors.dark.withOpacity(0.6) : null,
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'John Doe',
-                maxLines: 2,
+                address.name,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              const SizedBox(height: TSizes.sm / 2,),
-              const Text('(+62) 821 4078 4672', maxLines: 1, overflow: TextOverflow.ellipsis,),
-              const SizedBox(height: TSizes.sm / 2,),
-              const Text('Griya Citra Asri rm 26/27, Benowo, Surabaya', softWrap: true,)
+              const SizedBox(height: TSizes.sm / 2),
+              Text(address.phoneNumber, maxLines: 1, overflow: TextOverflow.ellipsis),
+              const SizedBox(height: TSizes.sm / 2),
+              Text(
+                '${address.street}, ${address.city}, ${address.postalCode}',
+                softWrap: true,
+              ),
             ],
-          )
+          ),
         ],
       ),
     );

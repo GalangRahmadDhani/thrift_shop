@@ -1,21 +1,20 @@
-import 'package:ecommerce_app/utils/constants/sizes.dart';
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 
 class TRoundedImage extends StatelessWidget {
   const TRoundedImage({
-    super.key, 
+    super.key,
     this.width,
-    this.height, 
-    required this.imageUrl, 
-    this.applyImageRadius = true, 
-    this.border,  
-    this.backgroundColor, 
-    this.fit = BoxFit.contain, 
-    this.padding, 
-    this.isNetworkImage = false, 
-    this.onPressed, 
-    this.borderRadius = TSizes.md,
+    this.height,
+    required this.imageUrl,
+    this.applyImageRadius = true,
+    this.border,
+    this.backgroundColor,
+    this.fit = BoxFit.contain,
+    this.padding,
+    this.isNetworkImage = false,
+    this.onPressed,
+    this.borderRadius = 16,
   });
 
   final double? width, height;
@@ -40,26 +39,24 @@ class TRoundedImage extends StatelessWidget {
         decoration: BoxDecoration(
           border: border,
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: applyImageRadius ? BorderRadius.circular(borderRadius) : null,
         ),
         child: ClipRRect(
           borderRadius: applyImageRadius ? BorderRadius.circular(borderRadius) : BorderRadius.zero,
-          child: isNetworkImage 
-            ? CachedNetworkImage(
-                imageUrl: imageUrl,
-                fit: fit,
-                placeholder: (context, url) => const Center(
-                  child: CircularProgressIndicator(),
+          child: imageUrl.startsWith('http') || imageUrl.startsWith('https')
+              ? CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  fit: fit,
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : Image.asset(
+                  imageUrl,
+                  fit: fit,
+                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
                 ),
-                errorWidget: (context, url, error) => const Icon(
-                  Icons.error_outline,
-                  color: Colors.red,
-                ),
-              )
-            : Image(
-                image: AssetImage(imageUrl),
-                fit: fit,
-              ),
         ),
       ),
     );

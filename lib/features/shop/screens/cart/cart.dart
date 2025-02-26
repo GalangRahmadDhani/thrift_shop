@@ -1,11 +1,12 @@
 import 'package:ecommerce_app/common/widgets/appbar/appbar.dart';
 import 'package:ecommerce_app/features/shop/screens/cart/widgets/cart_items.dart';
-import 'package:ecommerce_app/features/shop/screens/checkout/checkout.dart';
+import 'package:ecommerce_app/navigation_menu.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ecommerce_app/features/personalization/controllers/user_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../controllers/cart_controller.dart';
 import '../../controllers/payment_controller.dart';
 
@@ -25,7 +26,9 @@ class CartScreen extends StatelessWidget {
     
     return Scaffold(
       appBar: TAppBar(
-        showBackArrow: true,
+        // showBackArrow: true,
+        leadingIcon: Icons.arrow_back,
+        leadingOnPressed: () => Get.to(() => const NavigationMenu()),
         title: Text('Cart', style: Theme.of(context).textTheme.headlineSmall),
       ),
       body: const Padding(
@@ -36,53 +39,74 @@ class CartScreen extends StatelessWidget {
         padding: const EdgeInsets.all(TSizes.defaultSpace),
         child: Obx(() => ElevatedButton(
           onPressed: () async {
-            final user = userController.user.value;
-            
-            // Format customer details sesuai Postman
-            final customerDetails = {
-              'first_name': user.firstName,
-              'last_name': user.lastName,  // Tambahkan last name
-              'email': user.email,
-              'phone': user.phoneNumber,
-            };
+            try {
+              final user = userController.user.value;
+              final cartItems = cartController.cartItems;
+              
+              if (cartItems.isEmpty) {
+                Get.snackbar(
+                  'Error',
+                  'Cart is empty',
+                  backgroundColor: Colors.red.withOpacity(0.1),
+                );
+                return;
+              }
 
-            // Format items sesuai Postman
-            final items = cartController.cartItems.map((item) => {
-              'id': item.productId,
-              'name': item.productName,
-              'price': item.price.toInt(),
-              'quantity': item.quantity,
-            }).toList();
+              final userId = user.id;
+              final timestamp = DateTime.now().millisecondsSinceEpoch; 
+              final orderId = '$userId | $timestamp' ;
+              // final orderId = userId + '_ORDER_' +timestamp.toString() ;
+              
+              // Create order first
+              await FirebaseFirestore.instance.collection('Orders').doc(orderId).set({
+                'orderId': orderId,
+                'userId': userId,
+                'items': cartItems.map((item) => {
+                  'productId': item.productId,
+                  'name': item.productName,
+                  'price': item.price,
+                  'quantity': item.quantity,
+                }).toList(),
+                'total': cartController.total.value,
+                'status': 'PENDING',
+                'createdAt': FieldValue.serverTimestamp(),
+              });
 
-            final orderId = 'ORDER-${DateTime.now().millisecondsSinceEpoch}';
-            
-            // Get payment token from backend
-            final token = await paymentController.getPaymentToken(
-              orderId: orderId,
-              amount: cartController.total.value.toInt(),
-              customerDetails: customerDetails,
-              items: items,
-            );
+              // Format customer details & proceed with payment
+              final customerDetails = {
+                'first_name': user.firstName,
+                'last_name': user.lastName,
+                'email': user.email,
+                'phone': user.phoneNumber,
+              };
 
-            if (token != null) {
-              paymentController.showMidtransPayment(
-                token: token,
+              final items = cartItems.map((item) => {
+                'id': item.productId,
+                'name': item.productName,
+                'price': item.price.toInt(),
+                'quantity': item.quantity,
+              }).toList();
+
+              final token = await paymentController.getPaymentToken(
                 orderId: orderId,
-                onPageFinished: (url) {
-                  debugPrint('Payment page finished: $url');
-                },
-                onResponse: (result) {
-                  debugPrint('Payment completed: ${result.toJson()}');
-                  Get.back();
-                  // Handle successful payment (clear cart, update order status, etc)
-                },
+                amount: cartController.total.value.toInt(),
+                customerDetails: customerDetails,
+                items: items,
               );
-            } else {
+
+              if (token != null) {
+                // Remove await since showMidtransPayment is void
+                paymentController.showMidtransPayment(
+                  token: token,
+                  orderId: orderId,
+                );
+              }
+            } catch (e) {
+              debugPrint('Error processing checkout: $e');
               Get.snackbar(
                 'Error',
-                'Failed to initiate payment. Please try again.',
+                'Failed to process checkout: $e',
                 backgroundColor: Colors.red.withOpacity(0.1),
-                colorText: Colors.red,
               );
             }
           },

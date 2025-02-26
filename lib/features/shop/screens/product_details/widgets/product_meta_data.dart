@@ -1,15 +1,12 @@
-import 'package:ecommerce_app/common/widgets/custom_shape/container/rounded_container.dart';
-import 'package:ecommerce_app/common/widgets/images/t_circular_image.dart';
 import 'package:ecommerce_app/common/widgets/texts/brand_name_verified_icon.dart';
-import 'package:ecommerce_app/common/widgets/texts/product_price_text.dart';
 import 'package:ecommerce_app/common/widgets/texts/product_title_text.dart';
+import 'package:ecommerce_app/features/authentication/Admin/Brand%20&%20Category/models/brand_model.dart';
 import 'package:ecommerce_app/features/authentication/User/models/product_model.dart';
-import 'package:ecommerce_app/utils/constants/colors.dart';
-import 'package:ecommerce_app/utils/constants/enums.dart';
-import 'package:ecommerce_app/utils/constants/image_strings.dart';
+import 'package:ecommerce_app/features/shop/controllers/brand_controller.dart';
+import 'package:ecommerce_app/features/shop/controllers/product_controller.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
-import 'package:ecommerce_app/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class TProductMetaData extends StatelessWidget {
   final ProductModel product;
@@ -25,6 +22,8 @@ class TProductMetaData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ProductController>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -79,8 +78,23 @@ class TProductMetaData extends StatelessWidget {
         // Brand
         Row(
           children: [
-            const TProductTitleText(title: 'Brand: '),
-            TBrandTitleWithVerifiedIcon(title: product.brand),
+            const TProductTitleText(title: 'Brand: ', smallSize: false,),
+            StreamBuilder<List<BrandModel>>(
+              stream: Get.find<BrandController>().getBrandById(product.brandId),
+              builder: (context, snapshot) {
+                String brandName = 'Unknown Brand';
+                bool isFeatured = false;
+                if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  final brand = snapshot.data!.first;
+                  brandName = brand.name;
+                  isFeatured = brand.isFeatured ?? false;
+                }
+                return TBrandNameWithVerifiedIcon(
+                  brandName: brandName,
+                  showVerifiedIcon: isFeatured,
+                );
+              },
+            ),
           ],
         ),
       ],

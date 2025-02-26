@@ -1,26 +1,27 @@
-import 'package:ecommerce_app/common/widgets/texts/brand_title_text.dart';
-import 'package:ecommerce_app/utils/constants/colors.dart';
-import 'package:ecommerce_app/utils/constants/enums.dart';
-import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import '../../../utils/constants/colors.dart';
+import '../../../utils/constants/sizes.dart';
 import 'package:iconsax/iconsax.dart';
 
-class TBrandTitleWithVerifiedIcon extends StatelessWidget {
-  const TBrandTitleWithVerifiedIcon({
+class TBrandNameWithVerifiedIcon extends StatelessWidget {
+  const TBrandNameWithVerifiedIcon({
     super.key,
-    required this.title, 
-    this.maxLines = 1, 
-    this.textColor, 
-    this.iconColor = TColors.primary, 
-    this.textAlign = TextAlign.center, 
-    this.brandTextSize = TextSizes.small,
+    required this.brandName,
+    this.maxLines = 1,
+    this.textColor,
+    this.iconColor = TColors.primary,
+    this.textAlign = TextAlign.center,
+    this.brandTextAlignment = TextAlign.center,
+    this.showVerifiedIcon = false,
   });
 
-  final String title;
+  final String brandName;
   final int maxLines;
-  final Color? textColor, iconColor;
-  final TextAlign? textAlign;
-  final TextSizes brandTextSize;
+  final Color? textColor;
+  final Color iconColor;
+  final TextAlign textAlign;
+  final TextAlign brandTextAlignment;
+  final bool showVerifiedIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -28,22 +29,21 @@ class TBrandTitleWithVerifiedIcon extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Flexible(
-          child: TBrandTitleText(
-            title: title,
-            color: textColor,
+          child: Text(
+            brandName,
+            textAlign: brandTextAlignment,
             maxLines: maxLines,
-            textAlign: textAlign,
-            brandTextSize: brandTextSize,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.labelMedium!.apply(color: textColor),
           ),
         ),
-        const SizedBox(
-          width: TSizes.xs,
-        ),
-        const Icon(
-          Iconsax.verify5,
-          color: TColors.primary,
-          size: TSizes.iconXs,
-        )
+        if (showVerifiedIcon) const SizedBox(width: TSizes.xs),
+        if (showVerifiedIcon)
+          Icon(
+            Iconsax.verify5,
+            color: iconColor,
+            size: TSizes.iconXs,
+          ),
       ],
     );
   }

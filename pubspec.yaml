@@ -57,12 +57,18 @@ dependencies:
   webview_flutter: ^4.10.0
   midtrans_snap: ^1.0.0
   toolkit: ^0.3.2
+  flutter_riverpod: ^2.6.1
+  flutter_cache_manager: ^3.4.1
+  timeline_tile: ^2.0.0
+  syncfusion_flutter_charts: ^27.2.5
+  flutter_local_notifications: ^17.2.3
 
   # Supabase
   # supabase_flutter: ^2.8.3
 
   #-------------------- PACKAGE END --------------------#
 
+  uuid: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

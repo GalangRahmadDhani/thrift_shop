@@ -90,7 +90,8 @@ class CheckoutScreen extends StatelessWidget {
               onPressed: () => Get.offAll(() =>  const NavigationMenu()),
             )),
             child: const Text(
-              'Checkout \Rp300.000',
+              '',
+              // 'Checkout \Rp300.000',
             ),
           )),
     );

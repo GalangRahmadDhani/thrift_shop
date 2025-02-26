@@ -25,20 +25,20 @@ class ProductListScreen extends StatelessWidget {
     Get.put(ProductRepository());
     final controller = Get.put(ProductController());
     
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+    final GlobalKey<ScaffoldState> scaffoldProductListKey = GlobalKey<ScaffoldState>();
     final dark = THelperFunctions.isDarkMode(context);
 
     return Scaffold(
-      key: scaffoldKey,
+      key: scaffoldProductListKey,
       appBar: TAppBar(
         title: const Text('Product List'),
         leadingIcon: Icons.menu,
-        leadingOnPressed: () => scaffoldKey.currentState?.openDrawer(),
+        leadingOnPressed: () => scaffoldProductListKey.currentState?.openDrawer(),
         backgroundColor: dark ? TColors.dark : TColors.light,
       ),
       drawer: const AdminSidebar(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Get.to(const ProductAddScreen()),
+        onPressed: () => Get.to(() => const ProductAddScreen()),
         child: const Icon(Iconsax.add),
       ),
       body: RefreshIndicator(

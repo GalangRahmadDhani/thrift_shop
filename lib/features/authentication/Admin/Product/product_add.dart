@@ -16,20 +16,20 @@ class ProductAddScreen extends StatelessWidget {
     // Initialize dependencies
     Get.put(ProductRepository());
     
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+    final GlobalKey<ScaffoldState> scaffoldProductAddKey = GlobalKey<ScaffoldState>();
     final dark = THelperFunctions.isDarkMode(context);
 
     return Scaffold(
-      key: scaffoldKey, // Add this line to connect scaffoldKey
+      key: scaffoldProductAddKey, // Add this line to connect scaffoldKey
       appBar: TAppBar(
         title: const Text('Add Product'),
         // leadingIcon: Icons.menu,
         showBackArrow: true,
-        leadingOnPressed: () => scaffoldKey.currentState?.openDrawer(),
+        leadingOnPressed: () => scaffoldProductAddKey.currentState?.openDrawer(),
         backgroundColor: dark ? TColors.dark : TColors.light,
       ),
       drawer: const AdminSidebar(),
-      body: SingleChildScrollView( // Add this to make form scrollable
+      body: const SingleChildScrollView( // Add this to make form scrollable
         child: Padding(
           padding: EdgeInsets.all(TSizes.defaultSpace),
           child: ProductAddForm(),

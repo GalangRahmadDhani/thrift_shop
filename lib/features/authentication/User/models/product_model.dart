@@ -8,8 +8,8 @@ class ProductModel {
   final int price; // Change from double to int
   final int? salePrice; // Change from double to int
   final bool isSale;
-  final String brand;
-  final String category;
+  final String brandId;    // Ganti brand dengan brandId
+  final String categoryId; // Ganti category dengan categoryId
   final Map<String, int> sizes;
   final String color;
   final int stock; // Add this field
@@ -33,8 +33,8 @@ class ProductModel {
     required this.price,
     this.salePrice,
     this.isSale = false,
-    required this.brand,
-    required this.category,
+    required this.brandId,    // Update constructor
+    required this.categoryId, // Update constructor
     required this.sizes,
     required this.color,
     required this.stock, // Add this parameter
@@ -84,8 +84,8 @@ class ProductModel {
     price: 0,
     salePrice: null,
     isSale: false,
-    brand: "",
-    category: "",
+    brandId: "",    // Update field names
+    categoryId: "", // Update field names
     sizes: {},
     color: "",
     stock: 0, // Add this
@@ -100,6 +100,7 @@ class ProductModel {
     favoriteByUsers: [],
   );
 
+  // Update toJson method
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
@@ -108,8 +109,8 @@ class ProductModel {
     'price': price,
     'salePrice': salePrice,
     'isSale': isSale,
-    'brand': brand,
-    'category': category,
+    'brandId': brandId,       // Update field names
+    'categoryId': categoryId, // Update field names
     'sizes': sizes,
     'color': color,
     'stock': stock, // Add this
@@ -124,66 +125,68 @@ class ProductModel {
     'favoriteByUsers': favoriteByUsers,
   };
 
-    factory ProductModel.fromJson(Map<String, dynamic> json) {
-        return ProductModel(
-            id: json['id'] ?? '',
-            name: json['name'] ?? '',
-            description: json['description'] ?? '',
-            images: List<String>.from(json['images'] ?? []),
-            price: (json['price'] ?? 0).toInt(), // Convert to integer
-            salePrice: json['salePrice']?.toInt(), // Convert to integer
-            isSale: json['isSale'] ?? false,
-            brand: json['brand'] ?? '',
-            category: json['category'] ?? '',
-            sizes: Map<String, int>.from(json['sizes'] ?? {}),
-            color: json['color'] ?? '',
-            stock: (json['stock'] ?? 0) as int, // Fix stock parsing
-            isAvailable: json['isAvailable'] ?? true,
-            totalSales: json['totalSales'] ?? 0,
-            rating: (json['rating'] ?? 0.0).toDouble(),
-            reviewCount: json['reviewCount'] ?? 0,
-            lastSaleAt: json['lastSaleAt'] != null 
-                ? DateTime.parse(json['lastSaleAt']) 
-                : DateTime.now(),
-            viewCount: json['viewCount'] ?? 0,
-            discountPercentage: json['discountPercentage'],
-            isFavorite: json['isFavorite'] ?? false,
-            favoriteByUsers: List<String>.from(json['favoriteByUsers'] ?? []),
-        );
-    }
+  // Update fromJson factory
+  factory ProductModel.fromJson(Map<String, dynamic> json) {
+    return ProductModel(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      images: List<String>.from(json['images'] ?? []),
+      price: (json['price'] ?? 0).toInt(), // Convert to integer
+      salePrice: json['salePrice']?.toInt(), // Convert to integer
+      isSale: json['isSale'] ?? false,
+      brandId: json['brandId'] ?? '',       // Update field names
+      categoryId: json['categoryId'] ?? '', // Update field names
+      sizes: Map<String, int>.from(json['sizes'] ?? {}),
+      color: json['color'] ?? '',
+      stock: (json['stock'] ?? 0) as int, // Fix stock parsing
+      isAvailable: json['isAvailable'] ?? true,
+      totalSales: json['totalSales'] ?? 0,
+      rating: (json['rating'] ?? 0.0).toDouble(),
+      reviewCount: json['reviewCount'] ?? 0,
+      lastSaleAt: json['lastSaleAt'] != null 
+          ? DateTime.parse(json['lastSaleAt']) 
+          : DateTime.now(),
+      viewCount: json['viewCount'] ?? 0,
+      discountPercentage: json['discountPercentage'],
+      isFavorite: json['isFavorite'] ?? false,
+      favoriteByUsers: List<String>.from(json['favoriteByUsers'] ?? []),
+    );
+  }
 
-    // Add fromSnapshot factory method
-    factory ProductModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
-      final data = document.data()!;
-      return ProductModel(
-        id: document.id,
-        name: data['name'] ?? '',
-        description: data['description'] ?? '',
-        images: List<String>.from(data['images'] ?? []),
-        price: (data['price'] ?? 0).toInt(), // Convert to integer
-        salePrice: data['salePrice']?.toInt(), // Convert to integer
-        isSale: data['isSale'] ?? false,
-        brand: data['brand'] ?? '',
-        category: data['category'] ?? '',
-        sizes: Map<String, int>.from(data['sizes'] ?? {}),
-        color: data['color'] ?? '',
-        stock: (data['stock'] ?? 0) as int, // Fix stock parsing
-        isAvailable: data['isAvailable'] ?? true,
-        totalSales: data['totalSales'] ?? 0,
-        rating: (data['rating'] ?? 0.0).toDouble(),
-        reviewCount: data['reviewCount'] ?? 0,
-        lastSaleAt: data['lastSaleAt'] != null 
-            ? DateTime.parse(data['lastSaleAt']) 
-            : DateTime.now(),
-        viewCount: data['viewCount'] ?? 0,
-        discountPercentage: data['discountPercentage'],
-        isFavorite: data['isFavorite'] ?? false,
-        favoriteByUsers: List<String>.from(data['favoriteByUsers'] ?? []),
-      );
-    }
+  // Update fromSnapshot factory
+  factory ProductModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
+    final data = document.data()!;
+    print('Raw product data: $data'); // Debug print
+    return ProductModel(
+      id: document.id,
+      name: data['name'] ?? '',
+      description: data['description'] ?? '',
+      images: List<String>.from(data['images'] ?? []),
+      price: (data['price'] ?? 0).toInt(), // Convert to integer
+      salePrice: data['salePrice']?.toInt(), // Convert to integer
+      isSale: data['isSale'] ?? false,
+      brandId: data['brandId'] ?? '',       // Update field names
+      categoryId: data['categoryId'] ?? '', // Update field names
+      sizes: Map<String, int>.from(data['sizes'] ?? {}),
+      color: data['color'] ?? '',
+      stock: (data['stock'] ?? 0) as int, // Fix stock parsing
+      isAvailable: data['isAvailable'] ?? true,
+      totalSales: data['totalSales'] ?? 0,
+      rating: (data['rating'] ?? 0.0).toDouble(),
+      reviewCount: data['reviewCount'] ?? 0,
+      lastSaleAt: data['lastSaleAt'] != null 
+          ? DateTime.parse(data['lastSaleAt']) 
+          : DateTime.now(),
+      viewCount: data['viewCount'] ?? 0,
+      discountPercentage: data['discountPercentage'],
+      isFavorite: data['isFavorite'] ?? false,
+      favoriteByUsers: List<String>.from(data['favoriteByUsers'] ?? []),
+    );
+  }
 
-    // Add helper method
-    bool isFavoritedBy(String userId) {
-      return favoriteByUsers.contains(userId);
-    }
+  // Add helper method
+  bool isFavoritedBy(String userId) {
+    return favoriteByUsers.contains(userId);
+  }
 }

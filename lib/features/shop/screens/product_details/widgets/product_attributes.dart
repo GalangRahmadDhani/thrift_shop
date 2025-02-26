@@ -36,7 +36,7 @@ class TProductAttributes extends StatelessWidget {
                           const TProductTitleText(title: 'Harga : ', smallSize: true,),
 
                           Text(
-                            '\Rp 150.000',
+                            'Rp 150.000',
                             style: Theme.of(context).textTheme.titleSmall!.apply(decoration: TextDecoration.lineThrough),
                           ),
                           const SizedBox(width: TSizes.spaceBtwItems,),

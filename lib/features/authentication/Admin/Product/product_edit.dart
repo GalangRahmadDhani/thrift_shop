@@ -11,28 +11,44 @@ import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:ecommerce_app/utils/validators/validation.dart';
 import 'package:lottie/lottie.dart';
 
-class ProductEditPage extends StatelessWidget {
+class ProductEditPage extends StatefulWidget {
   final ProductModel product;
 
   const ProductEditPage({
-    Key? key,
+    super.key,
     required this.product,
-  }) : super(key: key);
+  });
+
+  @override
+  State<ProductEditPage> createState() => _ProductEditPageState();
+}
+
+class _ProductEditPageState extends State<ProductEditPage> {
+  final controller = Get.find<ProductController>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Pre-fill the form with existing product data
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.name.text = widget.product.name;
+      controller.description.text = widget.product.description;
+      controller.price.text = widget.product.price.toStringAsFixed(0);
+      controller.discountPrice.text = widget.product.salePrice?.toStringAsFixed(0) ?? '';
+      controller.brand.text = widget.product.brandId;
+      controller.category.text = widget.product.categoryId;
+      controller.stock.text = widget.product.stock.toString();
+      controller.imageUrl.text = widget.product.images.isNotEmpty ? widget.product.images.first : '';
+      
+      // Set selected values for dropdowns
+      controller.setSelectedBrand(controller.getBrandName(widget.product.brandId));
+      controller.setSelectedCategory(controller.getCategoryName(widget.product.categoryId));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<ProductController>();
-    final imageUrlPreview = (product.images.isNotEmpty ? product.images.first : "").obs;
-
-    // Pre-fill the form with existing product data
-    controller.name.text = product.name;
-    controller.description.text = product.description;
-    controller.price.text = product.price.toStringAsFixed(0); // Remove decimal places
-    controller.discountPrice.text = product.salePrice?.toStringAsFixed(0) ?? ''; // Remove decimal places
-    controller.brand.text = product.brand;
-    controller.category.text = product.category;
-    controller.stock.text = product.stock.toString();
-    controller.imageUrl.text = product.images.isNotEmpty ? product.images.first : ''; // Add this line
+    final imageUrlPreview = (widget.product.images.isNotEmpty ? widget.product.images.first : "").obs;
 
     return Scaffold(
       appBar: AppBar(
@@ -42,7 +58,7 @@ class ProductEditPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(TSizes.defaultSpace),
           child: Form(
-            key: controller.productFormKey,
+            key: controller.editProductFormKey, // Use editProductFormKey instead
             child: Column(
               children: [
                 // Image Section
@@ -75,9 +91,9 @@ class ProductEditPage extends StatelessWidget {
                                 File(controller.selectedImage.value!.path),
                                 fit: BoxFit.cover,
                               );
-                            } else if (product.images.isNotEmpty) {
+                            } else if (widget.product.images.isNotEmpty) {
                               return Image.network(
-                                product.images.first,
+                                widget.product.images.first,
                                 fit: BoxFit.cover,
                                 loadingBuilder: (context, child, loadingProgress) {
                                   if (loadingProgress == null) return child;
@@ -112,7 +128,7 @@ class ProductEditPage extends StatelessWidget {
                             if (value.trim().isNotEmpty && Uri.tryParse(value.trim())?.isAbsolute == true) {
                               imageUrlPreview.value = value.trim();
                             } else {
-                              imageUrlPreview.value = product.images.isNotEmpty ? product.images.first : '';
+                              imageUrlPreview.value = widget.product.images.isNotEmpty ? widget.product.images.first : '';
                             }
                           },
                         ),
@@ -200,27 +216,75 @@ class ProductEditPage extends StatelessWidget {
                 ),
                 const SizedBox(height: TSizes.spaceBtwInputFields),
 
-                // Brand & Category Row
-                Row(
+                // Brand & Category Dropdowns - Modified Layout
+                Wrap(
+                  spacing: TSizes.spaceBtwInputFields,
+                  runSpacing: TSizes.spaceBtwInputFields,
                   children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: controller.brand,
-                        validator: (value) => TValidator.validateEmptyText('Brand', value),
-                        decoration: const InputDecoration(
-                          labelText: 'Brand',
-                          prefixIcon: Icon(Iconsax.briefcase),
+                    // Brand Dropdown
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.4, // Adjust width
+                      child: Obx(
+                        () => DropdownButtonFormField<String>(
+                          isExpanded: true, // Make dropdown expand to container width
+                          value: controller.brandNames.contains(widget.product.brandId) 
+                              ? widget.product.brandId 
+                              : null,
+                          decoration: const InputDecoration(
+                            labelText: 'Brand',
+                            prefixIcon: Icon(Iconsax.briefcase),
+                          ),
+                          items: controller.brandNames // Use brandNames instead of brands
+                              .map((brandName) => DropdownMenuItem(
+                                    value: brandName,
+                                    child: Text(
+                                      brandName,
+                                      overflow: TextOverflow.ellipsis, // Handle text overflow
+                                    ),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              controller.setSelectedBrand(value);
+                              controller.brand.text = value;
+                            }
+                          },
+                          validator: (value) =>
+                              TValidator.validateEmptyText('Brand', value),
                         ),
                       ),
                     ),
-                    const SizedBox(width: TSizes.spaceBtwInputFields),
-                    Expanded(
-                      child: TextFormField(
-                        controller: controller.category,
-                        validator: (value) => TValidator.validateEmptyText('Category', value),
-                        decoration: const InputDecoration(
-                          labelText: 'Category',
-                          prefixIcon: Icon(Iconsax.category),
+                    
+                    // Category Dropdown
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.4, // Adjust width
+                      child: Obx(
+                        () => DropdownButtonFormField<String>(
+                          isExpanded: true, // Make dropdown expand to container width
+                          value: controller.categoryNames.contains(widget.product.categoryId) 
+                              ? widget.product.categoryId 
+                              : null,
+                          decoration: const InputDecoration(
+                            labelText: 'Category',
+                            prefixIcon: Icon(Iconsax.category),
+                          ),
+                          items: controller.categoryNames // Use categoryNames instead of categories
+                              .map((categoryName) => DropdownMenuItem(
+                                    value: categoryName,
+                                    child: Text(
+                                      categoryName,
+                                      overflow: TextOverflow.ellipsis, // Handle text overflow
+                                    ),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              controller.setSelectedCategory(value);
+                              controller.category.text = value;
+                            }
+                          },
+                          validator: (value) =>
+                              TValidator.validateEmptyText('Category', value),
                         ),
                       ),
                     ),
@@ -257,7 +321,7 @@ class ProductEditPage extends StatelessWidget {
   }
 
   void _handleUpdate(ProductController controller) async {
-    if (!controller.productFormKey.currentState!.validate()) return;
+    if (!controller.editProductFormKey.currentState!.validate()) return; // Update validation check
 
     try {
       // Show loading dialog
@@ -285,10 +349,10 @@ class ProductEditPage extends StatelessWidget {
         'brand': controller.brand.text.trim(),
         'category': controller.category.text.trim(),
         'stock': int.tryParse(controller.stock.text.trim()) ?? 0,
-        'images': newImageUrl != null ? [newImageUrl] : product.images,
+        'images': newImageUrl != null ? [newImageUrl] : widget.product.images,
       };
 
-      await controller.updateProduct(product.id, updatedData);
+      await controller.updateProduct(widget.product.id, updatedData);
       
       // Close loading dialog
       Get.back();

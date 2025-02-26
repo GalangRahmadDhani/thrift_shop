@@ -2,7 +2,6 @@ import 'package:ecommerce_app/common/widgets/custom_shape/container/rounded_cont
 import 'package:ecommerce_app/common/widgets/images/t_circular_image.dart';
 import 'package:ecommerce_app/common/widgets/texts/brand_name_verified_icon.dart';
 import 'package:ecommerce_app/utils/constants/colors.dart';
-import 'package:ecommerce_app/utils/constants/enums.dart';
 import 'package:ecommerce_app/utils/constants/image_strings.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:ecommerce_app/utils/helpers/helper_functions.dart';
@@ -50,9 +49,12 @@ class TBrandCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const TBrandTitleWithVerifiedIcon(
-                    title: 'Nike',
-                    brandTextSize: TextSizes.large,
+                  TBrandNameWithVerifiedIcon( // Changed from TBrandTitleWithVerifiedIcon
+                    brandName: 'Nike', // Changed from title
+                    showVerifiedIcon: true,
+                    textColor: THelperFunctions.isDarkMode(context) 
+                        ? TColors.white 
+                        : TColors.black,
                   ),
                   Text(
                     '256 produk',

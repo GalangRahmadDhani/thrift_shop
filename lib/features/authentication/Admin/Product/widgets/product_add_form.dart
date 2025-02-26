@@ -6,11 +6,26 @@ import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:ecommerce_app/utils/validators/validation.dart';
 import 'package:ecommerce_app/features/shop/controllers/product_controller.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
 
 import 'package:lottie/lottie.dart';
 
 class ProductAddForm extends StatelessWidget {
   const ProductAddForm({super.key});
+
+  // Formatter for adding thousand separators
+  static final _numberFormatter = NumberFormat.decimalPattern('en_US');
+
+  // Function to format the input with thousand separators
+  String _formatNumber(String value) {
+    if (value.isEmpty) return '';
+    return _numberFormatter.format(int.parse(value.replaceAll('.', '')));
+  }
+
+  // Function to remove the thousand separators for database storage
+  String _removeSeparators(String value) {
+    return value.replaceAll('.', '');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +38,7 @@ class ProductAddForm extends StatelessWidget {
     });
 
     return Form(
-      key: controller.productFormKey,
+      key: controller.addProductFormKey, // Use addProductFormKey instead
       child: Column(
         children: [
           // Image Upload Section
@@ -165,6 +180,15 @@ class ProductAddForm extends StatelessWidget {
                   controller: controller.price,
                   validator: (value) => TValidator.validateEmptyText('Price', value),
                   keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    final formatted = controller.formatNumber(value);
+                    if (formatted != value) {
+                      controller.price.value = TextEditingValue(
+                        text: formatted,
+                        selection: TextSelection.collapsed(offset: formatted.length),
+                      );
+                    }
+                  },
                   decoration: const InputDecoration(
                     labelText: 'Price',
                     prefixIcon: Icon(Iconsax.money),
@@ -177,8 +201,17 @@ class ProductAddForm extends StatelessWidget {
                 child: TextFormField(
                   controller: controller.discountPrice,
                   keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    final formatted = controller.formatNumber(value);
+                    if (formatted != value) {
+                      controller.discountPrice.value = TextEditingValue(
+                        text: formatted,
+                        selection: TextSelection.collapsed(offset: formatted.length),
+                      );
+                    }
+                  },
                   decoration: const InputDecoration(
-                    labelText: 'Harga diskon (Optional)' ,
+                    labelText: 'Discount Price (Optional)',
                     prefixIcon: Icon(Iconsax.discount_shape),
                   ),
                 ),
@@ -190,29 +223,100 @@ class ProductAddForm extends StatelessWidget {
           // Brand & Category Row
           Row(
             children: [
-              // Brand
+              // Brand Dropdown
               Expanded(
-                child: TextFormField(
-                  controller: controller.brand,
-                  validator: (value) => TValidator.validateEmptyText('Brand', value),
-                  decoration: const InputDecoration(
-                    labelText: 'Brand',
-                    prefixIcon: Icon(Iconsax.briefcase),
-                  ),
-                ),
+                child: Obx(() {
+                  if (controller.isBrandsLoading.value) {
+                    return const Center(
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    );
+                  }
+                  
+                  if (controller.brandNames.isEmpty) {
+                    return const Center(
+                      child: Text('No brands available', 
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    );
+                  }
+                  
+                  return DropdownButtonFormField<String>(
+                    isExpanded: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Brand',
+                      prefixIcon: Icon(Iconsax.briefcase),
+                    ),
+                    value: controller.selectedBrand.value.isEmpty 
+                        ? null 
+                        : controller.selectedBrand.value,
+                    items: controller.brandNames.map((brandName) => 
+                      DropdownMenuItem(
+                        value: brandName,
+                        child: Text(
+                          brandName,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
+                    ).toList(),
+                    onChanged: controller.setSelectedBrand,
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Please select a brand'
+                        : null,
+                  );
+                }),
               ),
               const SizedBox(width: TSizes.spaceBtwInputFields),
-              // Category
-              Expanded(
-                child: TextFormField(
-                  controller: controller.category,
-                  validator: (value) => TValidator.validateEmptyText('Category', value),
-                  decoration: const InputDecoration(
-                    labelText: 'Category',
-                    prefixIcon: Icon(Iconsax.category),
+              
+              // Category Dropdown
+          Expanded(
+            child: Obx(() {
+              if (controller.isCategoriesLoading.value) {
+                return const Center(
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
                   ),
+                );
+              }
+              
+              if (controller.categoryNames.isEmpty) {
+                return const Center(
+                  child: Text('No categories available', 
+                    style: TextStyle(color: Colors.red),
+                  ),
+                );
+              }
+              
+              return DropdownButtonFormField<String>(
+                isExpanded: true,
+                decoration: const InputDecoration(
+                  labelText: 'Category',
+                  prefixIcon: Icon(Iconsax.category),
                 ),
-              ),
+                value: controller.selectedCategory.value.isEmpty 
+                    ? null 
+                    : controller.selectedCategory.value,
+                items: controller.categoryNames.map((categoryName) => 
+                  DropdownMenuItem(
+                    value: categoryName,
+                    child: Text(
+                      categoryName,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )
+                ).toList(),
+                onChanged: controller.setSelectedCategory,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Please select a category'
+                    : null,
+              );
+            }),
+          ),
             ],
           ),
           const SizedBox(height: TSizes.spaceBtwInputFields),
@@ -233,7 +337,12 @@ class ProductAddForm extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => controller.addProduct(),
+              onPressed: () {
+                if (controller.addProductFormKey.currentState!.validate()) {
+                  controller.addProductFormKey.currentState!.save();
+                  controller.addProduct();
+                }
+              },
               child: const Text('Add Product'),
             ),
           ),

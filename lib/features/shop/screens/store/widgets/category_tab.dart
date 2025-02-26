@@ -57,7 +57,7 @@ class TCategoryTab extends StatelessWidget {
               }
 
               final products = category != null 
-                ? controller.products.where((p) => p.category == category).toList()
+                ? controller.products.where((p) => p.categoryId == category).toList()
                 : controller.products;
 
               if (products.isEmpty) {

@@ -230,7 +230,7 @@ uploadUserProfilePicture() async {
       imageUploading.value = true;
 
       // Upload to Cloudinary and get URL
-      String? imageUrl = await uploadToCloudinary(result);
+      String? imageUrl = await CloudinaryService.uploadFile(result);
       
       if (imageUrl != null) {
         // Update user image record
@@ -254,4 +254,4 @@ uploadUserProfilePicture() async {
     imageUploading.value = false;
   }
 }
-} 
+}

@@ -1,4 +1,7 @@
 import 'package:ecommerce_app/data/repositories/authentication/user/authentication_repository.dart';
+import 'package:ecommerce_app/features/authentication/Admin/Banner/banner_list.dart';
+import 'package:ecommerce_app/features/authentication/Admin/Brand%20&%20Category/brand_category_list.dart';
+import 'package:ecommerce_app/features/authentication/Admin/Orderan/order_list_admin.dart';
 import 'package:ecommerce_app/features/authentication/Admin/Product/product_list.dart';
 import 'package:ecommerce_app/utils/constants/colors.dart';
 import 'package:ecommerce_app/utils/helpers/helper_functions.dart';
@@ -57,16 +60,43 @@ class AdminSidebar extends StatelessWidget {
               style: TextStyle(color: dark ? TColors.light : TColors.black)
             ),
             onTap: () {
-              Get.to(const ProductListScreen());
+              Get.to(() => const ProductListScreen());
             },
           ),
+          // ListTile(
+          //   leading: Icon(Iconsax.user, color: dark ? TColors.light : null),
+          //   title: Text('Akun Customer',
+          //     style: TextStyle(color: dark ? TColors.light : TColors.black)
+          //   ),
+          //   onTap: () {
+          //     Get.back();
+          //   },
+          // ),
           ListTile(
-            leading: Icon(Iconsax.user, color: dark ? TColors.light : null),
-            title: Text('Akun Customer',
+            leading: Icon(Iconsax.activity, color: dark ? TColors.light : null),
+            title: Text('Banner',
               style: TextStyle(color: dark ? TColors.light : TColors.black)
             ),
             onTap: () {
-              Get.back();
+              Get.to(() => const BannerListScreen());
+            },
+          ),
+          ListTile(
+            leading: Icon(Iconsax.category, color: dark ? TColors.light : null),
+            title: Text('Brand & Categori',
+              style: TextStyle(color: dark ? TColors.light : TColors.black)
+            ),
+            onTap: () {
+              Get.to(() => const BrandCategoryList());
+            },
+          ),
+          ListTile(
+            leading: Icon(Iconsax.award, color: dark ? TColors.light : null),
+            title: Text('Orderan',
+              style: TextStyle(color: dark ? TColors.light : TColors.black)
+            ),
+            onTap: () {
+              Get.to(() => const OrderListAdminScreen());
             },
           ),
           Divider(color: dark ? TColors.darkerGrey : null),

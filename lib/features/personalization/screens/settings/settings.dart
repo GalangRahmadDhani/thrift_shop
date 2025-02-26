@@ -6,6 +6,7 @@ import 'package:ecommerce_app/common/widgets/texts/section_heading.dart';
 import 'package:ecommerce_app/data/repositories/authentication/user/authentication_repository.dart';
 import 'package:ecommerce_app/features/personalization/screens/address/address.dart';
 import 'package:ecommerce_app/features/personalization/screens/profile/profile.dart';
+import 'package:ecommerce_app/features/shop/screens/Riwayat%20Pembayaran/riwayat_transaksi_screen.dart';
 import 'package:ecommerce_app/features/shop/screens/cart/cart.dart';
 import 'package:ecommerce_app/features/shop/screens/order/order.dart';
 import 'package:ecommerce_app/utils/constants/colors.dart';
@@ -68,6 +69,12 @@ class SettingsScreen extends StatelessWidget {
                     title: 'Pesanan Saya', 
                     subtitle: 'Sedang dalam progress',
                     onTap: () => Get.to(() => const OrderScreen(),),
+                  ),
+                  TSettingMenuTile(
+                    icon: Iconsax.receipt, 
+                    title: 'History Pembelian', 
+                    subtitle: 'Sedang dalam progress',
+                    onTap: () => Get.to(() => RiwayatTransaksiScreen(),),
                   ),
                   // TSettingMenuTile(
                   //   icon: Iconsax.bank, 

@@ -24,33 +24,35 @@ class ProductRepository extends GetxController {
   }
 
   // Save product (with both Firestore and RTDB)
-  Future<void> saveProduct(ProductModel product) async {
+Future<void> saveProduct(ProductModel product) async {
+  try {
+    if (!await _isAdmin()) throw 'Unauthorized: Admin access required';
+
+    final docRef = _db.collection('Products').doc();
+    final now = DateTime.now();
+    final productData = {
+      ...product.toJson(),
+      'id': docRef.id,
+      'createdAt': now.toIso8601String(),
+      'updatedAt': now.toIso8601String(),
+    };
+
+    print('Saving to Firestore...'); // Debug log
+    await docRef.set(productData);
+    print('Successfully saved to Firestore'); // Debug log
+
     try {
-      if (!await _isAdmin()) throw 'Unauthorized: Admin access required';
-
-      final docRef = _db.collection('Products').doc();
-      final now = DateTime.now();
-      final productData = {
-        ...product.toJson(),
-        'id': docRef.id,
-        'createdAt': now.toIso8601String(),
-        'updatedAt': now.toIso8601String(),
-      };
-
-      // First save to Firestore
-      await docRef.set(productData);
-
-      // Then try to save to RTDB
-      try {
-        await _rtdb.child('products/${docRef.id}').set(productData);
-      } catch (rtdbError) {
-        print('RTDB Save failed: $rtdbError');
-        // Continue even if RTDB save fails
-      }
-    } catch (e) {
-      throw 'Error saving product: $e';
+      print('Saving to Realtime Database...'); // Debug log
+      await _rtdb.child('products/${docRef.id}').set(productData);
+      print('Successfully saved to Realtime Database'); // Debug log
+    } catch (rtdbError) {
+      print('RTDB Save failed: $rtdbError');
     }
+  } catch (e) {
+    print('Error in saveProduct: $e'); // Debug log
+    throw 'Error saving product: $e';
   }
+}
 
   // Get all products (with both Firestore and RTDB)
   Future<List<ProductModel>> getAllProducts() async {
@@ -65,9 +67,9 @@ class ProductRepository extends GetxController {
           .toList();
 
       print('Found ${products.length} products'); // Debugging
-      products.forEach((product) {
+      for (var product in products) {
         print('Product: ${product.name}, Images: ${product.images}'); // Debugging
-      });
+      }
 
       // Only sync to RTDB if user is admin
       if (await _isAdmin()) {

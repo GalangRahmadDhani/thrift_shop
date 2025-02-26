@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class TColors {
   // App theme colors#68A890
   static const Color primary = Color(0xFF517970);
+  static const Color krem = Color.fromARGB(255, 232, 213, 136);
   static const Color secondary = Color.fromARGB(255, 10, 101, 116);
   static const Color accent = Color.fromARGB(255, 226, 193, 215);
 

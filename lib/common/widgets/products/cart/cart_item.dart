@@ -2,12 +2,10 @@ import 'package:ecommerce_app/common/widgets/images/t_rounded_image.dart';
 import 'package:ecommerce_app/common/widgets/texts/brand_name_verified_icon.dart';
 import 'package:ecommerce_app/common/widgets/texts/product_title_text.dart';
 import 'package:ecommerce_app/utils/constants/colors.dart';
-import 'package:ecommerce_app/utils/constants/image_strings.dart';
 import 'package:ecommerce_app/utils/constants/sizes.dart';
 import 'package:ecommerce_app/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app/features/authentication/User/models/cart_model.dart';
-import 'package:iconsax/iconsax.dart';
 
 class TCartItem extends StatelessWidget {
   final CartModel cartItem;
@@ -28,7 +26,7 @@ class TCartItem extends StatelessWidget {
           imageUrl: cartItem.image,
           width: 60,
           height: 60,
-          padding: const EdgeInsets.all(TSizes.sm),
+          // padding: const EdgeInsets.all(TSizes.sm),
           backgroundColor: dark ? TColors.darkerGrey : TColors.light,
           isNetworkImage: true,
           fit: BoxFit.cover,
@@ -43,7 +41,10 @@ class TCartItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // brand
-              TBrandTitleWithVerifiedIcon(title: cartItem.productName),
+              TBrandNameWithVerifiedIcon(
+                brandName: cartItem.productName, // Change from 'title' to 'brandName'
+                showVerifiedIcon: false, // Add this to explicitly show no verification
+              ),
               Flexible(
                 child: TProductTitleText(
                   title: cartItem.productName,

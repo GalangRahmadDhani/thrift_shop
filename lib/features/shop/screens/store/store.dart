@@ -44,17 +44,17 @@ class StoreScreen extends StatelessWidget {
                       child: ListView(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        children: [
-                          const SizedBox(
+                        children: const [
+                          SizedBox(
                             height: TSizes.spaceBtwItems,
                           ),
-                          const TSearchContainer(
+                          TSearchContainer(
                             text: 'Cari di Toko...',
                             showBorder: true,
                             showBackground: false,
                             padding: EdgeInsets.zero,
                           ),
-                          const SizedBox(
+                          SizedBox(
                             height: TSizes.spaceBtwSections,
                           ),
 
@@ -63,7 +63,7 @@ class StoreScreen extends StatelessWidget {
                           //   title: 'Brand Populer',
                           //   onPressed: () => Get.to(() => const AllBrandsScreen()),
                           // ),
-                          const SizedBox(
+                          SizedBox(
                             height: TSizes.spaceBtwItems / 1.5,
                           ),
 

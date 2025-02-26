@@ -13,7 +13,7 @@ class TBillingAmountSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Subtotal', style: Theme.of(context).textTheme.bodyMedium,),
-            Text('\Rp350.000', style: Theme.of(context).textTheme.bodyMedium,),
+            Text('Rp350.000', style: Theme.of(context).textTheme.bodyMedium,),
           ],
         ),
         const SizedBox(height: TSizes.spaceBtwItems / 2,),
@@ -23,7 +23,7 @@ class TBillingAmountSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Pengiriman', style: Theme.of(context).textTheme.bodyMedium,),
-            Text('\Rp5.000', style: Theme.of(context).textTheme.labelLarge,),
+            Text('Rp5.000', style: Theme.of(context).textTheme.labelLarge,),
           ],
         ),
         const SizedBox(height: TSizes.spaceBtwItems / 2,),
@@ -33,7 +33,7 @@ class TBillingAmountSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Pajak', style: Theme.of(context).textTheme.bodyMedium,),
-            Text('\Rp6.000', style: Theme.of(context).textTheme.labelLarge,),
+            Text('Rp6.000', style: Theme.of(context).textTheme.labelLarge,),
           ],
         ),
         const SizedBox(height: TSizes.spaceBtwItems / 2,),
@@ -43,7 +43,7 @@ class TBillingAmountSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Total pesanan', style: Theme.of(context).textTheme.bodyMedium,),
-            Text('\Rp361.000', style: Theme.of(context).textTheme.titleMedium,),
+            Text('Rp361.000', style: Theme.of(context).textTheme.titleMedium,),
           ],
         ),
       ],
